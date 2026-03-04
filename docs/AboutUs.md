@@ -9,15 +9,13 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 ## Project team
 
-### John Doe
+### Sayyid Mehdi
 
-<img src="images/johndoe.png" width="200px">
-
+![Sayyid Mehdi](images/lamemario.jpg)
 [[homepage](http://www.comp.nus.edu.sg/~damithch)]
-[[github](https://github.com/johndoe)]
-[[portfolio](team/johndoe.md)]
+[[github](https://github.com/lamemario)]
 
-* Role: Project Advisor
+* Role: Project Developer
 
 ### Aishwarya Goyal
 
