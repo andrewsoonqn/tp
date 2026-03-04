@@ -9,15 +9,15 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 ## Project team
 
-### John Doe
+### Sayyid Mehdi
 
-<img src="images/johndoe.png" width="200px">
+![Screenshot_20250520_160728_Gallery](https://github.com/user-attachments/assets/5a31bdaa-4313-4211-a325-ae5e662e0127)
 
 [[homepage](http://www.comp.nus.edu.sg/~damithch)]
-[[github](https://github.com/johndoe)]
+[[github](https://github.com/lamemario)]
 [[portfolio](team/johndoe.md)]
 
-* Role: Project Advisor
+* Role: Project Developer
 
 ### Jane Doe
 
