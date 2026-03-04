@@ -17,24 +17,23 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 [[github](https://github.com/andrewsoonqn)]
 [[portfolio](team/andrewsoon.md)]
 
-### Jane Doe
+### Sayyid Mehdi
 
-<img src="images/johndoe.png" width="200px">
+![Sayyid Mehdi](images/lamemario.jpg)
+[[homepage](http://www.comp.nus.edu.sg/~damithch)]
+[[github](https://github.com/lamemario)]
 
-[[github](http://github.com/johndoe)]
-[[portfolio](team/johndoe.md)]
+* Role: Project Developer
+
+### Aishwarya Goyal
+
+<img src="images/aishgogoyal.png" width="200px">
+
+[[github](http://github.com/aishgogoyal)]
+[[portfolio](team/aishgogoyal.md)]
 
 * Role: Team Lead
 * Responsibilities: UI
-
-### Johnny Doe
-
-<img src="images/johndoe.png" width="200px">
-
-[[github](http://github.com/johndoe)] [[portfolio](team/johndoe.md)]
-
-* Role: Developer
-* Responsibilities: Data
 
 ### Jean Doe
 
@@ -46,12 +45,12 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 * Role: Developer
 * Responsibilities: Dev Ops + Threading
 
-### James Doe
+### Atharva
 
-<img src="images/johndoe.png" width="200px">
+<img src="images/athrv2.png" width="200px">
 
-[[github](http://github.com/johndoe)]
-[[portfolio](team/johndoe.md)]
+[[github](http://github.com/athrv2)]
+[[portfolio](team/atharva.md)]
 
 * Role: Developer
 * Responsibilities: UI
