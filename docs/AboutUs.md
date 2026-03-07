@@ -18,10 +18,11 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 [[portfolio](team/andrewsoon.md)]
 
 ### Sayyid Mehdi
+<img src="images/lamemario.jpg" width="200px">
 
-![Sayyid Mehdi](images/lamemario.jpg)
-[[homepage](http://www.comp.nus.edu.sg/~damithch)]
+[[homepage](www.linkedin.com/in/sayyid-mehdi-bin-safiyullah-a604171b4)]
 [[github](https://github.com/lamemario)]
+[[portfolio](team/sayyidmehdi.md)]
 
 * Role: Project Developer
 
