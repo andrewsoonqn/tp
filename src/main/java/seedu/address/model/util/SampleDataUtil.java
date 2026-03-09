@@ -11,31 +11,33 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.Room;
+import seedu.address.model.person.Remark;
 import seedu.address.model.tag.Tag;
 
 /**
  * Contains utility methods for populating {@code AddressBook} with sample data.
  */
 public class SampleDataUtil {
+    private static final Remark EMPTY_REMARK = new Remark("");
     public static Person[] getSamplePersons() {
         return new Person[] {
             new Person(new Name("Alex Yeoh"), new Phone("87438807"), new Email("alexyeoh@example.com"),
-                    new Room("#14-203-D"),
+                    new Room("#14-203-D"), EMPTY_REMARK,
                     getTagSet("friends")),
             new Person(new Name("Bernice Yu"), new Phone("99272758"), new Email("berniceyu@example.com"),
-                    new Room("#3-118-A"),
+                    new Room("#3-118-A"), EMPTY_REMARK,
                     getTagSet("colleagues", "friends")),
             new Person(new Name("Charlotte Oliveiro"), new Phone("93210283"), new Email("charlotte@example.com"),
-                    new Room("#11-004-C"),
+                    new Room("#11-004-C"), EMPTY_REMARK,
                     getTagSet("neighbours")),
             new Person(new Name("David Li"), new Phone("91031282"), new Email("lidavid@example.com"),
-                    new Room("#9-999-Z"),
+                    new Room("#9-999-Z"), EMPTY_REMARK,
                     getTagSet("family")),
             new Person(new Name("Irfan Ibrahim"), new Phone("92492021"), new Email("irfan@example.com"),
-                    new Room("#2-010-B"),
+                    new Room("#2-010-B"), EMPTY_REMARK,
                     getTagSet("classmates")),
             new Person(new Name("Roy Balakrishnan"), new Phone("92624417"), new Email("royb@example.com"),
-                    new Room("#10-101-E"),
+                    new Room("#10-101-E"), EMPTY_REMARK,
                     getTagSet("colleagues"))
         };
     }
