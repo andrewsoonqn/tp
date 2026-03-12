@@ -84,7 +84,7 @@ public class EditCommand extends Command {
         // edit command does not support editing of remark
         Remark updatedRemark = personToEdit.getRemark();
 
-        return new Person(updatedName, updatedPhone, updatedEmail, updatedRoom, updatedTags);
+        return new Person(updatedName, updatedPhone, updatedEmail, updatedRoom, updatedRemark, updatedTags);
     }
 
     @Override
