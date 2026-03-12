@@ -110,6 +110,7 @@ class JsonAdaptedPerson {
         }
         final Room modelRoom = new Room(room);
 
+        // Solution below adapted from https://se-education.org/guides/tutorials/ab3AddRemark.html
         final Remark modelRemark = new Remark(remark == null ? "" : remark);
 
         final Set<Tag> modelTags = new HashSet<>(personTags);
