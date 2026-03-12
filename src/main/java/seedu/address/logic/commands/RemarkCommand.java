@@ -95,6 +95,6 @@ public class RemarkCommand extends Command {
 
     @Override
     public int hashCode() {
-        return Objects.hash(index, remark);
+        return Objects.hash(index.getZeroBased(), remark);
     }
 }
