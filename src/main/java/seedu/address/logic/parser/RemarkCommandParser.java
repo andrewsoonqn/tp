@@ -25,7 +25,7 @@ public class RemarkCommandParser implements Parser<RemarkCommand> {
             index = ParserUtil.parseIndex(argMultimap.getPreamble());
         } catch (IllegalValueException ive) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                RemarkCommand.MESSAGE_USAGE), ive);
+                    RemarkCommand.MESSAGE_USAGE), ive);
         }
 
         Remark remark = new Remark(argMultimap.getValue(PREFIX_REMARK).orElse(""));

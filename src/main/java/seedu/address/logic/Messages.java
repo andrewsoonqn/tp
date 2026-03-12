@@ -26,7 +26,7 @@ public class Messages {
         assert duplicatePrefixes.length > 0;
 
         Set<String> duplicateFields =
-            Stream.of(duplicatePrefixes).map(Prefix::toString).collect(Collectors.toSet());
+                Stream.of(duplicatePrefixes).map(Prefix::toString).collect(Collectors.toSet());
 
         return MESSAGE_DUPLICATE_FIELDS + String.join(" ", duplicateFields);
     }
@@ -37,15 +37,15 @@ public class Messages {
     public static String format(Person person) {
         final StringBuilder builder = new StringBuilder();
         builder.append(person.getName())
-            .append("; Phone: ")
-            .append(person.getPhone())
-            .append("; Email: ")
-            .append(person.getEmail())
-            .append("; Room: ")
-            .append(person.getRoom())
-            .append("; Remark: ")
-            .append(person.getRemark())
-            .append("; Tags: ");
+                .append("; Phone: ")
+                .append(person.getPhone())
+                .append("; Email: ")
+                .append(person.getEmail())
+                .append("; Room: ")
+                .append(person.getRoom())
+                .append("; Remark: ")
+                .append(person.getRemark())
+                .append("; Tags: ");
         person.getTags().forEach(builder::append);
         return builder.toString();
     }

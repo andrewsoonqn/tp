@@ -79,7 +79,7 @@ public class Person {
         }
 
         return otherPerson != null
-            && otherPerson.getName().equals(getName());
+                && otherPerson.getName().equals(getName());
     }
 
     /**
@@ -99,11 +99,11 @@ public class Person {
 
         Person otherPerson = (Person) other;
         return name.equals(otherPerson.name)
-            && phone.equals(otherPerson.phone)
-            && email.equals(otherPerson.email)
-            && room.equals(otherPerson.room)
-            && remark.equals(otherPerson.remark)
-            && tags.equals(otherPerson.tags);
+                && phone.equals(otherPerson.phone)
+                && email.equals(otherPerson.email)
+                && room.equals(otherPerson.room)
+                && remark.equals(otherPerson.remark)
+                && tags.equals(otherPerson.tags);
     }
 
     @Override
@@ -115,13 +115,13 @@ public class Person {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-            .add("name", name)
-            .add("phone", phone)
-            .add("email", email)
-            .add("room", room)
-            .add("remark", remark)
-            .add("tags", tags)
-            .toString();
+                .add("name", name)
+                .add("phone", phone)
+                .add("email", email)
+                .add("room", room)
+                .add("remark", remark)
+                .add("tags", tags)
+                .toString();
     }
 
 }
