@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
+import seedu.address.model.person.Room;
+import seedu.address.model.person.RoomEqualsPredicate;
 
 public class FindCommandParserTest {
 
@@ -29,6 +31,17 @@ public class FindCommandParserTest {
 
         // multiple whitespaces between keywords
         assertParseSuccess(parser, " \n Alice \n \t Bob  \t", expectedFindCommand);
+    }
+
+    @Test
+    public void parse_validRoom_returnsFindCommandWithRoomPredicate() throws Exception {
+        String userInput = "  #14-203-D  ";
+        FindCommand command = parser.parse(userInput);
+
+        Room room = new Room("#14-203-D");
+        FindCommand expectedCommand = new FindCommand(new RoomEqualsPredicate(room));
+
+        assertParseSuccess(parser, userInput, expectedCommand);
     }
 
 }

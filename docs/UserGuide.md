@@ -110,22 +110,29 @@ Examples:
 *  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
 *  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
 
-### Locating persons by name: `find`
+### Locating persons by name or room: `find`
 
-Finds persons whose names contain any of the given keywords.
+Finds persons whose names contain any of the given keywords, or whose room matches the given room exactly.
 
-Format: `find KEYWORD [MORE_KEYWORDS]`
+Format:
+* `find KEYWORD [MORE_KEYWORDS]`
+* `find ROOM`
 
-* The search is case-insensitive. e.g `hans` will match `Hans`
-* The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
-* Only the name is searched.
-* Only full words will be matched e.g. `Han` will not match `Hans`
-* Persons matching at least one keyword will be returned (i.e. `OR` search).
-  e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`
+* For name searches:
+  * The search is case-insensitive. e.g. `hans` will match `Hans`.
+  * The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`.
+  * Only the name is searched.
+  * Only full words will be matched e.g. `Han` will not match `Hans`.
+  * Persons matching at least one keyword will be returned (i.e. `OR` search),
+    e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`.
+* For room searches:
+  * The room must follow the format `#BLOCK-ROOM-LETTER` (e.g. `#14-203-D`).
+  * The match is exact: only residents whose room is exactly the given room are returned.
 
 Examples:
 * `find John` returns `john` and `John Doe`
-* `find alex david` returns `Alex Yeoh`, `David Li`<br>
+* `find alex david` returns `Alex Yeoh`, `David Li`
+* `find #14-203-D` returns all residents staying in room `#14-203-D` (if any)<br>
   ![result for 'find alex david'](images/findAlexDavidResult.png)
 
 ### Deleting a person : `delete`
@@ -195,6 +202,6 @@ Action | Format, Examples
 **Clear** | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
-**Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
+**Find** | `find KEYWORD [MORE_KEYWORDS]` or `find ROOM`<br> e.g., `find James Jake`, `find #14-203-D`
 **List** | `list`
 **Help** | `help`

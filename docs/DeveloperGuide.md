@@ -331,7 +331,7 @@ Finally, the system should support basic usability and flexibility. A new RA sho
 
 **MSS**
 
-1. User requests to find a resident using a partial name keyword.
+1. User requests to find a resident using a partial name keyword or an exact room number.
 2. System shows a filtered list of matching residents with their indices.
 3. User identifies the correct resident and room number from the results.
 4. User requests to update the resident's phone number to the latest provided.
