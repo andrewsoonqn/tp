@@ -18,6 +18,8 @@ public class ListCommandParserTest {
         assertParseSuccess(parser, "   ", new ListCommand());
         assertParseSuccess(parser, " s/name", new ListCommand("name", null)); // Comparator is ignored in equals
         assertParseSuccess(parser, " s/room", new ListCommand("room", null));
+        assertParseSuccess(parser, " s/phone", new ListCommand("phone", null));
+        assertParseSuccess(parser, " s/email", new ListCommand("email", null));
     }
 
     @Test
@@ -26,6 +28,8 @@ public class ListCommandParserTest {
         assertParseFailure(parser, " random text", String
                 .format(MESSAGE_INVALID_COMMAND_FORMAT, ListCommand.MESSAGE_USAGE));
         assertParseFailure(parser, " s/", String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListCommand.MESSAGE_USAGE));
+        assertParseFailure(parser, " some preamble s/name",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListCommand.MESSAGE_USAGE));
         assertParseFailure(parser, " s/invalid", "Invalid sort field! Supported fields: name, room, phone, email");
     }
 }

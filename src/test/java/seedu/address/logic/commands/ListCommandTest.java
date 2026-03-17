@@ -60,6 +60,26 @@ public class ListCommandTest {
     }
 
     @Test
+    public void execute_listSortedByPhone_success() {
+        ListCommand listCommand = new ListCommand("phone", (p1, p2) -> p1.getPhone().value
+                .compareTo(p2.getPhone().value));
+        String expectedMessage = String.format(ListCommand.MESSAGE_SUCCESS_SORTED, "phone");
+        expectedModel.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS, (p1, p2) -> p1.getPhone().value
+                .compareTo(p2.getPhone().value));
+        assertCommandSuccess(listCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_listSortedByEmail_success() {
+        ListCommand listCommand = new ListCommand("email", (p1, p2) -> p1.getEmail().value
+                .compareToIgnoreCase(p2.getEmail().value));
+        String expectedMessage = String.format(ListCommand.MESSAGE_SUCCESS_SORTED, "email");
+        expectedModel.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS, (p1, p2) -> p1.getEmail().value
+                .compareToIgnoreCase(p2.getEmail().value));
+        assertCommandSuccess(listCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
     public void equals() {
         ListCommand listFirstCommand = new ListCommand();
         ListCommand listSecondCommand = new ListCommand();
@@ -80,5 +100,16 @@ public class ListCommandTest {
         assertFalse(new ListCommand("name", null).equals(new ListCommand("room", null)));
         // same sort field -> returns true
         assertTrue(new ListCommand("name", null).equals(new ListCommand("name", null)));
+    }
+
+    @Test
+    public void hashCode_test() {
+        ListCommand list1 = new ListCommand("name", null);
+        ListCommand list2 = new ListCommand("name", null);
+        assertTrue(list1.hashCode() == list2.hashCode());
+
+        ListCommand list3 = new ListCommand();
+        ListCommand list4 = new ListCommand();
+        assertTrue(list3.hashCode() == list4.hashCode());
     }
 }

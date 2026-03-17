@@ -72,4 +72,9 @@ public class ListCommand extends Command {
                 || (field != null && field.equals(otherListCommand.field));
         return fieldEquals;
     }
+
+    @Override
+    public int hashCode() {
+        return field == null ? 0 : field.hashCode();
+    }
 }
