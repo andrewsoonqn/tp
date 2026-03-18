@@ -31,6 +31,11 @@ public class RemarkCommandParser implements Parser<RemarkCommand> {
         // When the remark command is used, the user must provide a r/ arg
         String remarkText = argMultimap.getValue(PREFIX_REMARK)
                 .orElseThrow(() -> new ParseException(invalidCommandFormatMessage));
+
+        // Treat blank remark input as empty string to allow deletions
+        if (remarkText.isBlank()) {
+            remarkText = "";
+        }
         Remark remark = new Remark(remarkText);
 
         return new RemarkCommand(index, remark);

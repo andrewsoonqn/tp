@@ -24,9 +24,17 @@ public class RemarkCommandParserTest {
         RemarkCommand expectedCommand = new RemarkCommand(INDEX_FIRST_PERSON, new Remark(NON_EMPTY_REMARK));
         assertParseSuccess(parser, userInput, expectedCommand);
 
-        // no remark
-        userInput = targetIndex.getOneBased() + " " + PREFIX_REMARK;
-        expectedCommand = new RemarkCommand(INDEX_FIRST_PERSON, new Remark(""));
+    }
+
+    @Test
+    public void parse_blankRemark_treatedAsEmpty_success() {
+        Index targetIndex = INDEX_FIRST_PERSON;
+        RemarkCommand expectedCommand = new RemarkCommand(INDEX_FIRST_PERSON, new Remark(""));
+
+        String userInput = targetIndex.getOneBased() + " " + PREFIX_REMARK;
+        assertParseSuccess(parser, userInput, expectedCommand);
+
+        userInput = targetIndex.getOneBased() + " " + PREFIX_REMARK + "   ";
         assertParseSuccess(parser, userInput, expectedCommand);
     }
 
