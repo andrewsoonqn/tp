@@ -1,6 +1,7 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_REMARK_AMY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_REMARK;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
@@ -14,15 +15,14 @@ import seedu.address.logic.commands.RemarkCommand;
 import seedu.address.model.person.Remark;
 
 public class RemarkCommandParserTest {
-    private static final String NON_EMPTY_REMARK = "Some remark.";
     private RemarkCommandParser parser = new RemarkCommandParser();
 
     @Test
     public void parse_indexSpecified_success() {
         // have remark
         Index targetIndex = INDEX_FIRST_PERSON;
-        String userInput = targetIndex.getOneBased() + " " + PREFIX_REMARK + NON_EMPTY_REMARK;
-        RemarkCommand expectedCommand = new RemarkCommand(INDEX_FIRST_PERSON, new Remark(NON_EMPTY_REMARK));
+        String userInput = targetIndex.getOneBased() + " " + PREFIX_REMARK + VALID_REMARK_AMY;
+        RemarkCommand expectedCommand = new RemarkCommand(INDEX_FIRST_PERSON, new Remark(VALID_REMARK_AMY));
         assertParseSuccess(parser, userInput, expectedCommand);
 
     }
@@ -47,7 +47,7 @@ public class RemarkCommandParserTest {
         assertParseFailure(parser, RemarkCommand.COMMAND_WORD, expectedMessage);
 
         // no index
-        assertParseFailure(parser, RemarkCommand.COMMAND_WORD + " " + NON_EMPTY_REMARK, expectedMessage);
+        assertParseFailure(parser, RemarkCommand.COMMAND_WORD + " " + VALID_REMARK_AMY, expectedMessage);
     }
 
     @Test
