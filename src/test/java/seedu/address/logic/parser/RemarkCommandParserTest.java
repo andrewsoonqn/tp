@@ -9,6 +9,7 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.RemarkCommand;
 import seedu.address.model.person.Remark;
 
@@ -55,5 +56,13 @@ public class RemarkCommandParserTest {
 
         // missing remark prefix (equivalent to user typing "remark 1" without r/)
         assertParseFailure(parser, INDEX_FIRST_PERSON.getOneBased() + "", expectedMessage);
+    }
+
+    @Test
+    public void parse_repeatedRemarkPrefix_failure() {
+        String userInput = INDEX_FIRST_PERSON.getOneBased() + " " + PREFIX_REMARK + "first "
+                + PREFIX_REMARK + "second";
+
+        assertParseFailure(parser, userInput, Messages.getErrorMessageForDuplicatePrefixes(PREFIX_REMARK));
     }
 }
