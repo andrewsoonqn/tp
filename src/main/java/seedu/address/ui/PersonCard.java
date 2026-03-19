@@ -52,12 +52,25 @@ public class PersonCard extends UiPart<Region> {
     public PersonCard(Person person, int displayedIndex) {
         super(FXML);
         this.person = person;
+
         id.setText(displayedIndex + ". ");
+
         name.setText(person.getName().fullName);
+
         phone.setText(person.getPhone().value);
+
         room.setText(person.getRoom().value);
+
         email.setText(person.getEmail().value);
-        remark.setText(person.getRemark().value);
+
+        String remarkText = person.getRemark().value;
+        remark.setText(remarkText);
+        // Hide remark label if empty
+        boolean hasRemark = !remarkText.isBlank();
+        remark.setVisible(hasRemark);
+        // Do not reserve layout space for label
+        remark.setManaged(hasRemark);
+
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));

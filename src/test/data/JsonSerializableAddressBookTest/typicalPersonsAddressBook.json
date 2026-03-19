@@ -56,6 +56,16 @@
       "email": "anna@example.com",
       "room": "#1-001-A",
       "tags": []
+    },
+    {
+      "name": "Hannah Lim",
+      "phone": "91234567",
+      "email": "hannah@example.com",
+      "room": "#8-108-B",
+      "remark": "Prefers morning appointments",
+      "tags": [
+        "friends"
+      ]
     }
   ]
 }
