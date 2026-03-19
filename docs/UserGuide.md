@@ -110,6 +110,25 @@ Examples:
 *  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
 *  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
 
+### Adding or removing a remark : `remark`
+
+Adds a remark to a person in the address book, or removes the existing remark.
+
+Format: `remark INDEX r/REMARK`
+
+* Adds or updates the remark of the person at the specified `INDEX`.
+* The index refers to the index number shown in the displayed person list.
+* The index **must be a positive integer** 1, 2, 3, …​
+* Any existing remark will be overwritten by the new remark.
+* Leading and trailing whitespace in the remark is ignored.
+* If the remark is blank after trimming whitespace, it is treated as empty.
+* You can remove a person's remark by typing `remark INDEX r/`.
+
+Examples:
+* `remark 1 r/Prefers WhatsApp messages before visits` adds a remark to the 1st person.
+* `remark 2 r/Has collected the room key` updates the remark of the 2nd person.
+* `remark 3 r/` removes the remark from the 3rd person.
+
 ### Locating persons by name or room: `find`
 
 Finds persons whose names contain any of the given keywords, or whose room matches the given room exactly.
@@ -205,3 +224,4 @@ Action | Format, Examples
 **Find** | `find KEYWORD [MORE_KEYWORDS]` or `find ROOM`<br> e.g., `find James Jake`, `find #14-203-D`
 **List** | `list`
 **Help** | `help`
+**Remark** | `remark INDEX r/REMARK`<br> e.g., `remark 1 r/Prefers WhatsApp messages before visits`, `remark 3 r/`
