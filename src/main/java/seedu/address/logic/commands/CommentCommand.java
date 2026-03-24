@@ -10,42 +10,42 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
+import seedu.address.model.person.Comment;
 import seedu.address.model.person.Person;
-import seedu.address.model.person.Remark;
 
-// Solution below adapted from https://se-education.org/guides/tutorials/ab3AddRemark.html
+// Solution below adapted from https://se-education.org/
 /**
- * Changes the remark of an existing person in the address book.
+ * Changes the comment of an existing person in the address book.
  */
-public class RemarkCommand extends Command {
-    public static final String COMMAND_WORD = "remark";
+public class CommentCommand extends Command {
+    public static final String COMMAND_WORD = "comment";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Edits the remark of the person identified "
+            + ": Edits the comment of the person identified "
             + "by the index number used in the last person listing. "
-            + "Existing remark will be overwritten by the input.\n"
+            + "Existing comment will be overwritten by the input.\n"
             + "Parameters: INDEX (must be a positive integer) "
-            + "r/ [REMARK]\n"
+            + "c/ [COMMENT]\n"
             + "Example: " + COMMAND_WORD + " 1 "
-            + "r/ Likes to swim.";
+            + "c/ Likes to swim.";
 
-    public static final String MESSAGE_ADD_REMARK_SUCCESS = "Added remark to Person: %1$s";
-    public static final String MESSAGE_DELETE_REMARK_SUCCESS = "Removed remark from Person: %1$s";
+    public static final String MESSAGE_ADD_COMMENT_SUCCESS = "Added comment to Person: %1$s";
+    public static final String MESSAGE_DELETE_COMMENT_SUCCESS = "Removed comment from Person: %1$s";
 
-    public static final String MESSAGE_ARGUMENTS = "Index: %1$d, Remark: %2$s";
+    public static final String MESSAGE_ARGUMENTS = "Index: %1$d, Comment: %2$s";
 
     private final Index index;
-    private final Remark remark;
+    private final Comment comment;
 
     /**
      * @param index of the person in the filtered person list to edit
-     * @param remark of the person to be updated to
+     * @param comment of the person to be updated to
      */
-    public RemarkCommand(Index index, Remark remark) {
-        requireAllNonNull(index, remark);
+    public CommentCommand(Index index, Comment comment) {
+        requireAllNonNull(index, comment);
 
         this.index = index;
-        this.remark = remark;
+        this.comment = comment;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class RemarkCommand extends Command {
         Person personToEdit = lastShownList.get(index.getZeroBased());
         Person editedPerson = new Person(
                 personToEdit.getName(), personToEdit.getPhone(), personToEdit.getEmail(),
-                personToEdit.getRoom(), remark, personToEdit.getTags());
+                personToEdit.getRoom(), comment, personToEdit.getTags());
 
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
@@ -69,11 +69,11 @@ public class RemarkCommand extends Command {
 
     /**
      * Generates a command execution success message based on whether
-     * the remark is added to or removed from
+     * the comment is added to or removed from
      * {@code personToEdit}.
      */
     private String generateSuccessMessage(Person personToEdit) {
-        String message = !remark.value.isEmpty() ? MESSAGE_ADD_REMARK_SUCCESS : MESSAGE_DELETE_REMARK_SUCCESS;
+        String message = !comment.value.isEmpty() ? MESSAGE_ADD_COMMENT_SUCCESS : MESSAGE_DELETE_COMMENT_SUCCESS;
         return String.format(message, Messages.format(personToEdit));
     }
 
@@ -84,17 +84,17 @@ public class RemarkCommand extends Command {
         }
 
         // instanceof handles nulls
-        if (!(other instanceof RemarkCommand)) {
+        if (!(other instanceof CommentCommand)) {
             return false;
         }
 
-        RemarkCommand e = (RemarkCommand) other;
+        CommentCommand e = (CommentCommand) other;
         return index.equals(e.index)
-                && remark.equals(e.remark);
+                && comment.equals(e.comment);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(index.getZeroBased(), remark);
+        return Objects.hash(index.getZeroBased(), comment);
     }
 }
