@@ -131,10 +131,42 @@ public class AddCommandParserTest {
 
     @Test
     public void parse_optionalFieldsMissing_success() {
-        // zero tags
-        Person expectedPerson = new PersonBuilder(AMY).withTags().build();
+        // missing tags
+        Person expectedPersonWithoutTags = new PersonBuilder(AMY).withTags().build();
         assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY + ROOM_DESC_AMY,
-                new AddCommand(expectedPerson));
+                new AddCommand(expectedPersonWithoutTags));
+
+        // missing phone
+        Person expectedPersonWithoutPhone = new PersonBuilder()
+                .withName(VALID_NAME_BOB)
+                .withEmail(VALID_EMAIL_BOB)
+                .withRoom(VALID_ROOM_BOB)
+                .withPhone(AddCommandParser.DEFAULT_PHONE)
+                .withTags()
+                .build();
+        assertParseSuccess(parser, NAME_DESC_BOB + EMAIL_DESC_BOB + ROOM_DESC_BOB,
+                new AddCommand(expectedPersonWithoutPhone));
+
+        // missing email
+        Person expectedPersonWithoutEmail = new PersonBuilder()
+                .withName(VALID_NAME_BOB)
+                .withPhone(VALID_PHONE_BOB)
+                .withRoom(VALID_ROOM_BOB)
+                .withEmail(AddCommandParser.DEFAULT_EMAIL)
+                .withTags()
+                .build();
+        assertParseSuccess(parser, NAME_DESC_BOB + PHONE_DESC_BOB + ROOM_DESC_BOB,
+                new AddCommand(expectedPersonWithoutEmail));
+
+        // missing phone and email
+        Person expectedPersonWithoutPhoneAndEmail = new PersonBuilder()
+                .withName(VALID_NAME_BOB)
+                .withRoom(VALID_ROOM_BOB)
+                .withPhone(AddCommandParser.DEFAULT_PHONE)
+                .withEmail(AddCommandParser.DEFAULT_EMAIL)
+                .withTags()
+                .build();
+        assertParseSuccess(parser, NAME_DESC_BOB + ROOM_DESC_BOB, new AddCommand(expectedPersonWithoutPhoneAndEmail));
     }
 
     @Test
@@ -143,14 +175,6 @@ public class AddCommandParserTest {
 
         // missing name prefix
         assertParseFailure(parser, VALID_NAME_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ROOM_DESC_BOB,
-                expectedMessage);
-
-        // missing phone prefix
-        assertParseFailure(parser, NAME_DESC_BOB + VALID_PHONE_BOB + EMAIL_DESC_BOB + ROOM_DESC_BOB,
-                expectedMessage);
-
-        // missing email prefix
-        assertParseFailure(parser, NAME_DESC_BOB + PHONE_DESC_BOB + VALID_EMAIL_BOB + ROOM_DESC_BOB,
                 expectedMessage);
 
         // missing room prefix
