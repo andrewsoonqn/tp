@@ -1,21 +1,43 @@
 package seedu.address.logic.parser;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
+import static seedu.address.testutil.TypicalPersons.ALICE;
+import static seedu.address.testutil.TypicalPersons.BENSON;
+import static seedu.address.testutil.TypicalPersons.CARL;
+import static seedu.address.testutil.TypicalPersons.DANIEL;
+import static seedu.address.testutil.TypicalPersons.ELLE;
+import static seedu.address.testutil.TypicalPersons.FIONA;
+import static seedu.address.testutil.TypicalPersons.GEORGE;
+import static seedu.address.testutil.TypicalPersons.HANNAH;
 
+import java.util.Arrays;
 import java.util.Comparator;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.ListCommand;
+import seedu.address.model.Model;
+import seedu.address.model.ModelManager;
+import seedu.address.model.UserPrefs;
 import seedu.address.model.person.Person;
+import seedu.address.testutil.TypicalPersons;
 
 public class ListCommandParserTest {
 
     private static final Comparator<Person> DUMMY_COMPARATOR = (p1, p2) -> 0;
 
     private ListCommandParser parser = new ListCommandParser();
+
+    private Model model;
+
+    @BeforeEach
+    public void setUp() {
+        model = new ModelManager(TypicalPersons.getTypicalAddressBook(), new UserPrefs());
+    }
 
     @Test
     public void parse_validArgs_returnsListCommand() {
@@ -39,5 +61,25 @@ public class ListCommandParserTest {
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListCommand.MESSAGE_USAGE));
         assertParseFailure(parser, " -sort invalid/",
                 "Invalid sort field! Supported field prefixes: n/, r/, p/, e/");
+    }
+
+    @Test
+    public void execute_listSortedByName_runsComparator() throws Exception {
+        ListCommand command = parser.parse(" -sort n/");
+        command.execute(model);
+
+        assertEquals(
+                Arrays.asList(ALICE, BENSON, CARL, DANIEL, ELLE, FIONA, GEORGE, HANNAH),
+                model.getFilteredPersonList());
+    }
+
+    @Test
+    public void execute_listSortedByEmail_runsComparator() throws Exception {
+        ListCommand command = parser.parse(" -sort e/");
+        command.execute(model);
+
+        assertEquals(
+                Arrays.asList(ALICE, GEORGE, DANIEL, HANNAH, CARL, BENSON, FIONA, ELLE),
+                model.getFilteredPersonList());
     }
 }
