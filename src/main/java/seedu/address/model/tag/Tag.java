@@ -11,10 +11,10 @@ import java.util.logging.Logger;
  */
 public class Tag {
 
-    private static final Logger logger = Logger.getLogger(Tag.class.getName());
-
     public static final String MESSAGE_CONSTRAINTS =
         "Tags must be one of the following: Vegetarian, Vegan, Halal, Allergies";
+
+    private static final Logger logger = Logger.getLogger(Tag.class.getName());
 
     public final TagType tagType;
 
