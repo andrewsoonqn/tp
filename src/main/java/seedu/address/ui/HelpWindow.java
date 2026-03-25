@@ -58,7 +58,7 @@ public class HelpWindow extends UiPart<Stage> {
      *         if this method is called on the primary stage.
      *         </li>
      *         <li>
-     *         if {@code dialogStage} is already showing.
+     *         if the root stage (returned by {@link #getRoot()}) is already showing.
      *         </li>
      *         </ul>
      */
