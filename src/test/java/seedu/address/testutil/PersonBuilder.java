@@ -3,11 +3,11 @@ package seedu.address.testutil;
 import java.util.HashSet;
 import java.util.Set;
 
+import seedu.address.model.person.Comment;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
-import seedu.address.model.person.Remark;
 import seedu.address.model.person.Room;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.util.SampleDataUtil;
@@ -21,13 +21,13 @@ public class PersonBuilder {
     public static final String DEFAULT_PHONE = "85355255";
     public static final String DEFAULT_EMAIL = "amy@gmail.com";
     public static final String DEFAULT_ROOM = "#14-203-D";
-    public static final String DEFAULT_REMARK = "";
+    public static final String DEFAULT_COMMENT = "";
 
     private Name name;
     private Phone phone;
     private Email email;
     private Room room;
-    private Remark remark;
+    private Comment comment;
     private Set<Tag> tags;
 
     /**
@@ -38,7 +38,7 @@ public class PersonBuilder {
         phone = new Phone(DEFAULT_PHONE);
         email = new Email(DEFAULT_EMAIL);
         room = new Room(DEFAULT_ROOM);
-        remark = new Remark(DEFAULT_REMARK);
+        comment = new Comment(DEFAULT_COMMENT);
         tags = new HashSet<>();
     }
 
@@ -50,7 +50,7 @@ public class PersonBuilder {
         phone = personToCopy.getPhone();
         email = personToCopy.getEmail();
         room = personToCopy.getRoom();
-        remark = personToCopy.getRemark();
+        comment = personToCopy.getComment();
         tags = new HashSet<>(personToCopy.getTags());
     }
 
@@ -96,10 +96,10 @@ public class PersonBuilder {
     }
 
     /**
-     * Sets the {@code Remark} of the {@code Person} that we are building.
+     * Sets the {@code Comment} of the {@code Person} that we are building.
      */
-    public PersonBuilder withRemark(String remark) {
-        this.remark = new Remark(remark);
+    public PersonBuilder withComment(String comment) {
+        this.comment = new Comment(comment);
         return this;
     }
 
@@ -107,6 +107,6 @@ public class PersonBuilder {
      * Builds the {@code Person} object.
      */
     public Person build() {
-        return new Person(name, phone, email, room, remark, tags);
+        return new Person(name, phone, email, room, comment, tags);
     }
 }

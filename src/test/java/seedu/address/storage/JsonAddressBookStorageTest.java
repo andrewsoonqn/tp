@@ -88,8 +88,8 @@ public class JsonAddressBookStorageTest {
     }
 
     @Test
-    public void readAndSaveAddressBook_withRemark_success() throws Exception {
-        Path filePath = testFolder.resolve("RemarkedAddressBook.json");
+    public void readAndSaveAddressBook_withComment_success() throws Exception {
+        Path filePath = testFolder.resolve("CommentedAddressBook.json");
         JsonAddressBookStorage jsonAddressBookStorage = new JsonAddressBookStorage(filePath);
         AddressBook original = new AddressBook();
         original.addPerson(HANNAH);

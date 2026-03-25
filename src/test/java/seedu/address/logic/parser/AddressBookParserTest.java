@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_REMARK_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_COMMENT_BOB;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_THIRD_PERSON;
@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.commands.ClearCommand;
+import seedu.address.logic.commands.CommentCommand;
 import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
@@ -24,11 +25,10 @@ import seedu.address.logic.commands.ExitCommand;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListCommand;
-import seedu.address.logic.commands.RemarkCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.person.Comment;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
-import seedu.address.model.person.Remark;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
 import seedu.address.testutil.PersonBuilder;
 import seedu.address.testutil.PersonUtil;
@@ -99,10 +99,10 @@ public class AddressBookParserTest {
     }
 
     @Test
-    public void parseCommand_remark() throws Exception {
-        RemarkCommand command = (RemarkCommand) parser.parseCommand(
-                RemarkCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased() + " r/" + VALID_REMARK_BOB);
-        assertEquals(new RemarkCommand(INDEX_FIRST_PERSON, new Remark(VALID_REMARK_BOB)), command);
+    public void parseCommand_comment() throws Exception {
+        CommentCommand command = (CommentCommand) parser.parseCommand(
+                CommentCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased() + " c/" + VALID_COMMENT_BOB);
+        assertEquals(new CommentCommand(INDEX_FIRST_PERSON, new Comment(VALID_COMMENT_BOB)), command);
     }
 
     @Test

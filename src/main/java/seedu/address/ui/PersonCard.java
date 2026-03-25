@@ -43,7 +43,7 @@ public class PersonCard extends UiPart<Region> {
     @FXML
     private FlowPane tags;
     @FXML
-    private Label remark;
+    private Label comment;
 
     /**
      * Creates a {@code PersonCode} with the given {@code Person} and index to
@@ -63,13 +63,13 @@ public class PersonCard extends UiPart<Region> {
 
         email.setText(person.getEmail().value);
 
-        String remarkText = person.getRemark().value;
-        remark.setText(remarkText);
-        // Hide remark label if empty
-        boolean hasRemark = !remarkText.isBlank();
-        remark.setVisible(hasRemark);
+        String commentText = person.getComment().value;
+        comment.setText(commentText);
+        // Hide comment label if empty
+        boolean hasComment = !commentText.isBlank();
+        comment.setVisible(hasComment);
         // Do not reserve layout space for label
-        remark.setManaged(hasRemark);
+        comment.setManaged(hasComment);
 
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))

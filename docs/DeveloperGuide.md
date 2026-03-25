@@ -9,7 +9,7 @@ title: Developer Guide
 
 ## **Acknowledgements**
 
-* The `remark` feature implementation is adapted from the se-edu tutorial [Adding a Remark Command to AB3](https://se-education.org/guides/tutorials/ab3AddRemark.html).
+* The `comment` feature implementation is adapted from the se-edu tutorial [Adding optional fields to AB3](https://se-education.org/).
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -82,7 +82,7 @@ The `UI` component,
 * listens for changes to `Model` data so that the UI can be updated with the modified data.
 * keeps a reference to the `Logic` component, because the `UI` relies on the `Logic` to execute commands.
 * depends on some classes in the `Model` component, as it displays `Person` object residing in the `Model`.
-* renders a resident's remark in `PersonCard` only when the remark is non-empty, so empty remarks do not take up space in the list view.
+* renders a resident's comment in `PersonCard` only when the comment is non-empty, so empty comments do not take up space in the list view.
 
 ### Logic component
 
@@ -123,7 +123,7 @@ How the parsing works:
 
 The `Model` component,
 
-* stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object). Each `Person` stores immutable values for `Name`, `Phone`, `Email`, `Room`, `Remark`, and tags.
+* stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object). Each `Person` stores immutable values for `Name`, `Phone`, `Email`, `Room`, `Comment`, and tags.
 * stores the currently 'selected' `Person` objects (e.g., results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
 * stores a `UserPref` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
 * does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
@@ -143,7 +143,7 @@ The `Model` component,
 
 The `Storage` component,
 * can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
-* persists each person's remark in the JSON data file and loads missing `remark` fields as empty remarks to preserve compatibility with older saved data.
+* persists each person's comment in the JSON data file and loads missing `comment` fields as empty comments to preserve compatibility with older saved data.
 * inherits from both `AddressBookStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
 * depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
 
@@ -294,7 +294,7 @@ Felix is a Year 3 Soc student and RA at Acacia College. Approachable and proacti
 * As an RA, I can list all residents, so that I can review the current roster at a glance.
 * As a forgetful RA, I can find residents by name keyword or exact room, so that I can retrieve a record even when I only remember partial information.
 * As an RA, I can edit a resident's core details, so that the address book stays accurate when contact information changes.
-* As an RA, I can add or clear a private remark for a resident, so that I can keep follow-up notes without changing the resident's main details.
+* As an RA, I can add or clear a private comment for a resident, so that I can keep follow-up notes without changing the resident's main details.
 * As an RA, I can delete resident records that are no longer needed, so that the address book remains organised.
 * As a new RA, I can refer to help and documentation, so that I can learn the command format quickly.
 
@@ -325,14 +325,14 @@ Felix is a Year 3 Soc student and RA at Acacia College. Approachable and proacti
 
       Use case resumes at step 2.
 
-**Use case: Add or clear a resident remark**
+**Use case: Add or clear a resident comment**
 
 **MSS**
 
 1. User requests to list residents or find a resident.
 2. System shows a list of residents with their indices.
-3. User requests to add a remark to a specific resident in the list.
-4. System updates the resident's remark.
+3. User requests to add a comment to a specific resident in the list.
+4. System updates the resident's comment.
 5. System shows the updated resident list.
 
    Use case ends.
@@ -349,9 +349,9 @@ Felix is a Year 3 Soc student and RA at Acacia College. Approachable and proacti
 
       Use case resumes at step 2.
 
-* 3b. The user provides `r/` with no text.
+* 3b. The user provides `c/` with no text.
 
-    * 3b1. System clears the resident's existing remark.
+    * 3b1. System clears the resident's existing comment.
 
       Use case ends.
 
@@ -479,7 +479,7 @@ Felix is a Year 3 Soc student and RA at Acacia College. Approachable and proacti
 * **Private contact detail**: A contact detail that is not meant to be shared with others
 * **Resident**: A person living in the residential college whose information is stored and managed by the system. Each resident record may include fields such as name, room number, and other optional details.
 * **Resident Assistant (RA)**: The primary user of the application who manages resident information, performs onboarding, and maintains records throughout the semester for a batch of residents living in the residential college.
-* **Remark**: A free-form note stored with a resident record for short contextual information such as follow-ups or special reminders.
+* **Comment**: A free-form note stored with a resident record for short contextual information such as follow-ups or special reminders.
 * **User's Preferences (UserPref)**: Settings related to the application environment (e.g., window size or file paths) that are saved locally and loaded when the application starts.
 * **JSON**: JSON (JavaScript Object Notation) is the data format used by the application to store resident information and user preferences on disk.
 * **Index**: The number used by commands (e.g., `delete 1`) to identify a resident from the currently displayed list.
@@ -545,20 +545,20 @@ testers are expected to do more *exploratory* testing.
 
 1. _{ more test cases …​ }_
 
-### Editing a person's remark
+### Editing a person's comment
 
-1. Adding or clearing a remark while all persons are being shown
+1. Adding or clearing a comment while all persons are being shown
 
    1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
 
-   1. Test case: `remark 1 r/Requires wheelchair-accessible venue`<br>
-      Expected: The first person's remark is updated. The success message is shown in the result display. The person card shows the new remark.
+   1. Test case: `comment 1 c/Requires wheelchair-accessible venue`<br>
+      Expected: The first person's comment is updated. The success message is shown in the result display. The person card shows the new comment.
 
-   1. Test case: `remark 1 r/`<br>
-      Expected: The first person's remark is removed. The success message is shown in the result display. The remark label is no longer shown on the person card.
+   1. Test case: `comment 1 c/`<br>
+      Expected: The first person's comment is removed. The success message is shown in the result display. The comment label is no longer shown on the person card.
 
-   1. Other incorrect remark commands to try: `remark`, `remark 1`, `remark 0 r/test`, `remark x r/test`, `remark 1 r/first r/second`<br>
-      Expected: No person's remark is changed. Error details are shown in the result display.
+   1. Other incorrect comment commands to try: `comment`, `comment 1`, `comment 0 c/test`, `comment x c/test`, `comment 1 c/first c/second`<br>
+      Expected: No person's comment is changed. Error details are shown in the result display.
 
 ### Saving data
 

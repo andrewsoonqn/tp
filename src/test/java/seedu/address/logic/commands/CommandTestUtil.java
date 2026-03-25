@@ -60,9 +60,9 @@ public class CommandTestUtil {
     public static final EditCommand.EditPersonDescriptor DESC_AMY;
     public static final EditCommand.EditPersonDescriptor DESC_BOB;
 
-    public static final String VALID_REMARK_AMY = "Like skiing.";
-    public static final String VALID_REMARK_BOB = "Favourite pastime: Eating";
-    public static final String VALID_REMARK_HANNAH = "Prefers morning appointments";
+    public static final String VALID_COMMENT_AMY = "Like skiing.";
+    public static final String VALID_COMMENT_BOB = "Favourite pastime: Eating";
+    public static final String VALID_COMMENT_HANNAH = "Prefers morning appointments";
 
 
     static {

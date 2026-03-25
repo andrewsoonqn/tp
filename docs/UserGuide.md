@@ -118,24 +118,24 @@ Examples:
 *  `edit 1 p/91234567 e/e1222222@u.nus.edu` Edits the phone number and email address of the 1st person to be `91234567` and `e1222222@u.nus.edu` respectively.
 *  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
 
-### Adding or removing a remark : `remark`
+### Adding or removing a comment : `comment`
 
-Adds a remark to a person in the address book, or removes the existing remark.
+Adds a comment to a person in the address book, or removes the existing comment.
 
-Format: `remark INDEX r/[REMARK]`
+Format: `comment INDEX c/[COMMENT]`
 
-* Adds or updates the remark of the person at the specified `INDEX`.
+* Adds or updates the comment of the person at the specified `INDEX`.
 * The index refers to the index number shown in the displayed person list.
 * The index **must be a positive integer** 1, 2, 3, …​
-* Any existing remark will be overwritten by the new remark.
-* Leading and trailing whitespace in the remark is ignored.
-* If the remark is blank after trimming whitespace, it is treated as empty.
-* You can remove a person's remark by typing `remark INDEX r/`.
+* Any existing comment will be overwritten by the new comment.
+* Leading and trailing whitespace in the comment is ignored.
+* If the comment is blank after trimming whitespace, it is treated as empty.
+* You can remove a person's comment by typing `comment INDEX c/`.
 
 Examples:
-* `remark 1 r/Prefers WhatsApp messages before visits` adds a remark to the 1st person.
-* `remark 2 r/Has collected the room key` updates the remark of the 2nd person.
-* `remark 3 r/` removes the remark from the 3rd person.
+* `comment 1 c/Prefers WhatsApp messages before visits` adds a comment to the 1st person.
+* `comment 2 c/Has collected the room key` updates the comment of the 2nd person.
+* `comment 3 c/` removes the comment from the 3rd person.
 
 ### Locating persons by name or room: `find`
 
@@ -232,4 +232,4 @@ Action | Format, Examples
 **Find** | `find KEYWORD [MORE_KEYWORDS]` or `find ROOM`<br> e.g., `find James Jake`, `find #14-203-D`
 **List** | `list [s/FIELD]` <br> e.g., `list s/room`
 **Help** | `help`
-**Remark** | `remark INDEX r/REMARK`<br> e.g., `remark 1 r/Prefers WhatsApp messages before visits`, `remark 3 r/`
+**Comment** | `comment INDEX c/COMMENT`<br> e.g., `comment 1 c/Prefers WhatsApp messages before visits`, `comment 3 c/`

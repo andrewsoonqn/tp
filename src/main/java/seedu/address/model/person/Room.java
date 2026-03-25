@@ -10,8 +10,8 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 public class Room implements Comparable<Room> {
 
     public static final String MESSAGE_CONSTRAINTS =
-        "Room must follow the format #FLOOR-UNIT[-LETTER], where floor is 1-2 digits, "
-        + "unit is 2-3 digits, and letter is optional (e.g. #14-203-D or #14-20).";
+            "Room must follow the format #FLOOR-UNIT[-LETTER], where floor is 1-2 digits, "
+                    + "unit is 2-3 digits, and letter is optional (e.g. #14-203-D or #14-20).";
 
     /*
      * The first character of the room number must not be a whitespace,

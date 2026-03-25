@@ -3,10 +3,10 @@ package seedu.address.model.person;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_COMMENT_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_REMARK_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_ROOM_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.testutil.Assert.assertThrows;
@@ -86,8 +86,8 @@ public class PersonTest {
         editedAlice = new PersonBuilder(ALICE).withRoom(VALID_ROOM_BOB).build();
         assertFalse(ALICE.equals(editedAlice));
 
-        // different remark -> returns false
-        editedAlice = new PersonBuilder(ALICE).withRemark(VALID_REMARK_AMY).build();
+        // different comment -> returns false
+        editedAlice = new PersonBuilder(ALICE).withComment(VALID_COMMENT_AMY).build();
         assertFalse(ALICE.equals(editedAlice));
 
         // different tags -> returns false
@@ -98,7 +98,7 @@ public class PersonTest {
     @Test
     public void toStringMethod() {
         String expected = Person.class.getCanonicalName() + "{name=" + ALICE.getName() + ", phone=" + ALICE.getPhone()
-                + ", email=" + ALICE.getEmail() + ", room=" + ALICE.getRoom() + ", remark=" + ALICE.getRemark()
+                + ", email=" + ALICE.getEmail() + ", room=" + ALICE.getRoom() + ", comment=" + ALICE.getComment()
                 + ", tags=" + ALICE.getTags() + "}";
         assertEquals(expected, ALICE.toString());
     }
