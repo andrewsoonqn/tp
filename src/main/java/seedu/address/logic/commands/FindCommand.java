@@ -19,11 +19,11 @@ public class FindCommand extends Command {
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": Finds all persons whose names contain any of the specified keywords (case-insensitive), "
-            + "or whose room matches the specified room exactly, and displays them as a list with index numbers.\n"
+            + "or whose room contains the specified room fragment, and displays them as a list with index numbers.\n"
             + "Parameters: KEYWORD [MORE_KEYWORDS]... | ROOM\n"
             + "Examples:\n"
             + "  " + COMMAND_WORD + " alice bob charlie\n"
-            + "  " + COMMAND_WORD + " #14-203-D";
+            + "  " + COMMAND_WORD + " #14-2";
 
     private final Predicate<Person> predicate;
 

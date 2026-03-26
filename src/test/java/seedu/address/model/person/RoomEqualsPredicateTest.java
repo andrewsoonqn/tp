@@ -12,8 +12,8 @@ public class RoomEqualsPredicateTest {
 
     @Test
     public void equals() {
-        Room roomA = new Room("#14-203-D");
-        Room roomB = new Room("#3-118-A");
+        String roomA = "#14-2";
+        String roomB = "#3-1";
 
         RoomEqualsPredicate firstPredicate = new RoomEqualsPredicate(roomA);
         RoomEqualsPredicate secondPredicate = new RoomEqualsPredicate(roomB);
@@ -37,26 +37,23 @@ public class RoomEqualsPredicateTest {
 
     @Test
     public void test_roomMatches_returnsTrue() {
-        Room room = new Room("#14-203-D");
-        RoomEqualsPredicate predicate = new RoomEqualsPredicate(room);
+        RoomEqualsPredicate predicate = new RoomEqualsPredicate("#14-2");
 
         assertTrue(predicate.test(new PersonBuilder().withRoom("#14-203-D").build()));
     }
 
     @Test
     public void test_roomDoesNotMatch_returnsFalse() {
-        Room room = new Room("#14-203-D");
-        RoomEqualsPredicate predicate = new RoomEqualsPredicate(room);
+        RoomEqualsPredicate predicate = new RoomEqualsPredicate("#14-2");
 
         assertFalse(predicate.test(new PersonBuilder().withRoom("#3-118-A").build()));
     }
 
     @Test
     public void toStringMethod() {
-        Room room = new Room("#14-203-D");
-        RoomEqualsPredicate predicate = new RoomEqualsPredicate(room);
+        RoomEqualsPredicate predicate = new RoomEqualsPredicate("#14-2");
 
-        String expected = "RoomEqualsPredicate[room=#14-203-D]";
+        String expected = "RoomEqualsPredicate[roomFragment=#14-2]";
         assertEquals(expected, predicate.toString());
     }
 }
