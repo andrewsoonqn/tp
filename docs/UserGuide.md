@@ -229,13 +229,13 @@ _Details coming soon ..._
 
 ## Command summary
 
-Action     | Format, Examples
------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-**Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/e1234567@u.nus.edu a/#14-203-D t/friend t/colleague`
-**Clear**  | `clear`
-**Delete** | `delete INDEX`<br> e.g., `delete 3`
-**Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/e1234567@u.nus.edu`
-**Find**   | `find KEYWORD [MORE_KEYWORDS]` or `find ROOM`<br> e.g., `find James Jake`, `find #14-203-D`
-**List**   | `list [s/FIELD]` <br> e.g., `list s/room`
-**Help**   | `help`
-**Comment** | `comment INDEX c/COMMENT`<br> e.g., `comment 1 c/Prefers WhatsApp messages before visits`, `comment 3 c/`
+ Action      | Format, Examples                                                                                                                                     
+-------------|------------------------------------------------------------------------------------------------------------------------------------------------------
+ **Add**     | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/e1234567@u.nus.edu a/#14-203-D t/friend t/colleague` 
+ **Clear**   | `clear`                                                                                                                                              
+ **Delete**  | `delete INDEX`<br> e.g., `delete 3`                                                                                                                  
+ **Edit**    | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/e1234567@u.nus.edu`                            
+ **Find**    | `find KEYWORD [MORE_KEYWORDS]` or `find ROOM`<br> e.g., `find James Jake`, `find #14-203-D`                                                          
+ **List**    | `list [s/FIELD]` <br> e.g., `list s/room`                                                                                                            
+ **Help**    | `help`                                                                                                                                               
+ **Comment** | `comment INDEX c/COMMENT`<br> e.g., `comment 1 c/Prefers WhatsApp messages before visits`, `comment 3 c/`                                            
