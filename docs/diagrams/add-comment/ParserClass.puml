@@ -8,10 +8,7 @@ Class "<<interface>>\nParser<T extends Command>" as Parser {
 Class CommentCommandParser {
   +parse(String): CommentCommand
 }
-Class ParseException
 
 CommentCommandParser .up.|> Parser : T = CommentCommand
 CommentCommandParser ..> CommentCommand : <<create>>
-Parser .right.> ParseException: throws >
-CommentCommandParser .right.> ParseException: throws >
 @enduml
