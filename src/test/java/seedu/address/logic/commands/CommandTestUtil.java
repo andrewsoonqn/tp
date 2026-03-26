@@ -46,6 +46,7 @@ public class CommandTestUtil {
     public static final String ROOM_DESC_AMY = " " + PREFIX_ROOM + VALID_ROOM_AMY;
     public static final String ROOM_DESC_BOB = " " + PREFIX_ROOM + VALID_ROOM_BOB;
     public static final String TAG_DESC_ALLERGIES = " " + PREFIX_TAG + VALID_TAG_ALLERGIES;
+
     public static final String TAG_DESC_HALAL = " " + PREFIX_TAG + VALID_TAG_HALAL;
 
     public static final String INVALID_NAME_DESC = " " + PREFIX_NAME + "James&"; // '&' not allowed in names

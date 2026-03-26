@@ -59,7 +59,7 @@ public class Tag {
         }
 
         Tag otherTag = (Tag) other;
-        return this.tagType == otherTag.tagType;
+        return tagType.equals(otherTag.tagType);
     }
 
     @Override
