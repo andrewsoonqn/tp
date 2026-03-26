@@ -16,13 +16,12 @@ Class CommentCommand {
   +execute(Model): CommandResult
 }
 
-Class CommandException
 Class Comment
 Class Index
 
 CommentCommand -up-|> Command
-CommentCommand -down-> "1" Comment : has >
-CommentCommand -down-> "1" Index : has >
 Command ..> CommandException: <<throws>>
 CommentCommand .right.> CommandException: <<throws>>
+CommentCommand *-- "1" Comment : has >
+CommentCommand -down-> "1" Index : references >
 @enduml
