@@ -17,9 +17,9 @@ public class ListCommand extends Command {
     public static final String COMMAND_WORD = "list";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Lists all residents in the address book.\n"
-            + "Parameters: [s/FIELD]\n"
-            + "Supported fields: name, room, phone, email\n"
-            + "Example: " + COMMAND_WORD + " s/room";
+            + "Parameters: [-sort FIELD_PREFIX]\n"
+            + "Supported field prefixes: n/, r/, p/, e/\n"
+            + "Example: " + COMMAND_WORD + " -sort r/";
 
     public static final String MESSAGE_SUCCESS = "Listed all residents";
     public static final String MESSAGE_SUCCESS_SORTED = "Listed all residents sorted by %1$s";
@@ -50,6 +50,8 @@ public class ListCommand extends Command {
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
+        assert (field == null) == (comparator == null)
+                : "field and comparator should either both be set or both be null";
         if (comparator != null) {
             model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS, comparator);
             return new CommandResult(String.format(MESSAGE_SUCCESS_SORTED, field));
