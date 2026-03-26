@@ -11,6 +11,9 @@ public class RoomEqualsPredicate implements Predicate<Person> {
 
     private final String roomFragment;
 
+    /**
+     * Creates a predicate that matches persons whose room contains {@code roomFragment}.
+     */
     public RoomEqualsPredicate(String roomFragment) {
         requireNonNull(roomFragment);
         this.roomFragment = roomFragment;
