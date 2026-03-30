@@ -91,12 +91,56 @@ title: User Guide
 
 ### Viewing help : `help`
 
-Shows a message explaining how to access the help page.
+Shows a help window with a link to the application’s online user guide.
 
-![help message](images/helpMessage.png)
+Format:
+`help`
 
-Format: `help`
+Expected Output:
+After inputting `help`:
 
+`Opened help window.`
+
+💡 Note:
+* The help window includes a URL to the online user guide.
+
+Warnings:
+If the help window is already open but minimized, running `help` again will focus it (you may need to restore it manually).
+
+Tips:
+Use this command whenever you need a quick reminder of the documentation link.
+
+---
+
+### 🔍 Finding residents by name or room : `find`
+
+Finds residents by name (matches names containing keywords) or by room.
+
+Format:
+`find KEYWORD [MORE_KEYWORDS]`
+`find ROOM`
+
+Expected Output:
+`X persons listed!`
+
+💡 Note:
+Name search:
+* Case-insensitive (e.g., `hans` matches `Hans`)
+* Matches full words only (e.g., `Han` does not match `Hans`)
+* Keyword order does not matter (e.g., `find Hans Bo` matches `Bo Hans`)
+* Uses OR logic (matches if any keyword is found)
+
+Room search:
+* Must match exact format `#BLOCK-ROOM-LETTER` (e.g., `#14-203-D`)
+
+Warnings:
+No input provided → `Invalid command format!`
+
+Tips:
+* Use multiple keywords to quickly find groups.
+* After `find`, you can use `edit` or `delete` using the indices shown in the result list.
+
+---
 
 ### Adding a person: `add`
 
@@ -112,19 +156,44 @@ Examples:
 * `add n/John Doe p/98765432 e/e1234567@u.nus.edu r/#14-203-D`
 * `add n/Betsy Crowe t/friend e/e4567890@u.nus.edu r/#10-10 p/1234567 t/vegetarian`
 
+---
+
 ### Listing all persons : `list`
 
-Shows a list of all persons in the address book. Optionally, sorts the list by a specific field.
+Shows a list of all persons in the address book. Optionally sorts the list.
 
-Format: `list [-sort PREFIX]`
+Format:
+`list`
+`list -sort PREFIX`
 
-* Supported field prefixes for `PREFIX`: `n/` (name), `r/` (room), `p/` (phone), `e/` (email).
-* If `-sort PREFIX` is omitted, the default order is used (chronological by addition).
+Expected Output:
+When sorting is NOT used:
+`Listed all residents`
+
+When sorting IS used:
+`Listed all residents sorted by FIELD`
+
+💡 Note:
+Supported sort prefixes:
+* `n/` (name)
+* `r/` (room)
+* `p/` (phone)
+* `e/` (email)
+
+Warnings:
+* Invalid command format → `Invalid command format!`
+* Invalid sort prefix (e.g., `list -sort x/`) → `Invalid sort field! Supported field prefixes: n/, r/, p/, e/`
+
+Tips:
+* Use `list -sort PREFIX` to review residents in a predictable order.
+* If you run `find`, the displayed order may reset—run `list -sort ...` again if needed.
 
 Examples:
-* `list` Lists all residents.
-* `list -sort r/` Lists all residents sorted by room number.
-* `list -sort n/` Lists all residents sorted by name (case-insensitive).
+Input → Expected Output
+* `list` → `Listed all residents`
+* `list -sort r/` → `Listed all residents sorted by room`
+* `list -sort n/` → `Listed all residents sorted by name`
+
 
 ### Editing a person : `edit`
 
