@@ -23,9 +23,13 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
      */
     public DeleteCommand parse(String args) throws ParseException {
         try {
-            List<Index> indices = Arrays.stream(args.trim().split(","))
+            List<Index> indices = Arrays.stream(args.trim().split(",", -1))
                     .map(String::trim)
                     .map(indexText -> {
+                        if (indexText.isEmpty()) {
+                            throw new IllegalArgumentException();
+                        }
+
                         try {
                             return ParserUtil.parseIndex(indexText);
                         } catch (ParseException e) {
