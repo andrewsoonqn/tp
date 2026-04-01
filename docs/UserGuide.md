@@ -112,36 +112,6 @@ Use this command whenever you need a quick reminder of the documentation link.
 
 ---
 
-### 🔍 Finding residents by name or room : `find`
-
-Finds residents by name (matches names containing keywords) or by room.
-
-Format:
-`find KEYWORD [MORE_KEYWORDS]`
-`find ROOM`
-
-Expected Output:
-`X persons listed!`
-
-💡 Note:
-Name search:
-* Case-insensitive (e.g., `hans` matches `Hans`)
-* Matches full words only (e.g., `Han` does not match `Hans`)
-* Keyword order does not matter (e.g., `find Hans Bo` matches `Bo Hans`)
-* Uses OR logic (matches if any keyword is found)
-
-Room search:
-* Must match exact format `#BLOCK-ROOM-LETTER` (e.g., `#14-203-D`)
-
-Warnings:
-No input provided → `Invalid command format!`
-
-Tips:
-* Use multiple keywords to quickly find groups.
-* After `find`, you can use `edit` or `delete` using the indices shown in the result list.
-
----
-
 ### Adding a person: `add`
 
 Adds a person to the address book.
@@ -250,9 +220,9 @@ Warnings:
 * Use `comment INDEX c/` to quickly clear outdated notes.
 </div>
 
-### 🔍 Finding residents by name or room: `find`
+### 🔍 Finding residents by name or room : `find`
 
-Finds residents by name (matches names containing any keyword) or by exact room.
+Finds residents by name (matches names containing any keyword) or by room text.
 
 Format:
 * `find KEYWORD [MORE_KEYWORDS]`
@@ -265,13 +235,13 @@ Expected Output:
 
 **Name search**
 * Case-insensitive (e.g., `hans` matches `Hans`)
-* Matches full words only (e.g., `Han` does not match `Hans`)
+* Matches text within a name (e.g., `Han` matches `Hans`)
 * Keyword order does not matter (e.g., `find Hans Bo` matches `Bo Hans`)
 * Uses OR logic (e.g., `find Hans Bo` returns `Hans Bo`, `Bo Tan`)
 
 **Room search**
-* Must match exact format `#BLOCK-ROOM-LETTER` (e.g., `#14-203-D`)
-* Matches must be exact (e.g., `#05-203-D` ≠ `#5-203-D`)
+* Starts with `#` and matches room text case-insensitively
+* You can search with a full room number (e.g., `#14-203-D`) or a room fragment (e.g., `#14-2`)
 </div>
 
 Examples:
@@ -281,16 +251,16 @@ Examples:
 * `find alex david`  
   → Shows residents `Alex Yeoh`, `David Li`
 * `find #14-203-D`  
-  → Shows residents in that room  
+  → Shows residents whose room contains `#14-203-D`
+* `find #14-2`
+  → Shows residents whose room contains `#14-2`
 
 Warnings:
 * No input provided → `Invalid command format!`
 
 <div markdown="span" class="alert alert-primary">:bulb: **Tips:**
 * Use multiple keywords to quickly find groups (e.g., `find Alex Bob David Hannah`).
-* Combine with other commands for efficiency:
-  * `find Alex` → `delete 1`
-  * `find Alex` → `edit 1 r/#14-205`
+* After `find`, you can use `edit` or `delete` with the indices shown in the result list.
 </div>
 
 ### 🗑️ Deleting a resident: `delete`
