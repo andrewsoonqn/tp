@@ -407,15 +407,52 @@ _Details coming soon ..._
 
 ## FAQ
 
-**Q**: How do I transfer my data to another Computer?<br>
-**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous AddressBook home folder.
+### Resident details
+
+**Q**: What information can I store for each resident?<br>
+**A**: In RACE, each resident has a name and room, plus optional phone number, email address, tags, and a comment.
+
+**Q**: Is it required to enter the phone number and email for a resident?<br>
+**A**: No. You can omit these when using the `add` command.
+
+**Q**: Can I add a comment while creating a resident?<br>
+**A**: No. Comments cannot be added as part of the `add` command. They must be added later with the `comment` command.
+
+### Rules and limitations
+
+**Q**: Can I add two residents with the same name?<br>
+**A**: No. The app treats residents with the same name as duplicates, even if their other details are different. Try adding unique qualifiers to the name, e.g., `Alex Tan (Block 14)` and `Alex Tan (Block 9)`.
+**Q**: Can I delete more than one resident at once?<br>
+**A**: Yes. You can delete multiple residents in one command by providing multiple indices.
+
+### Saving and data
+
+**Q**: Does the app save automatically?<br>
+**A**: Yes. Successful changes are saved automatically.
+
+**Q**: Where is my data stored?<br>
+**A**: Your data is stored in `data/addressbook.json`, in the same folder as the `.jar` file you use to open the app.
+
+**Q**: How do I move my data to another computer, or pass it to another RA taking over?<br>
+**A**: Close the app first. Then find `data/addressbook.json` in the same folder as the `.jar` file you use to open the app. Copy that file into the `data` folder within the same folder as the `.jar` file in the new setup. If the new setup already has its own `addressbook.json`, replace it with your copied file. When you open the app again, your resident list should appear there.
+
+**Q**: What happens the first time I open the app?<br>
+**A**: If no data file exists yet, the app starts with sample residents. These are written to `data/addressbook.json` when you make your first successful change. If the file exists but cannot be loaded properly, the app starts with an empty list, and your next successful change saves a fresh data file.
+
+### Help
+
+**Q**: How do I get help?<br>
+**A**: Use the `help` command or press `F1` to open the help window.
 
 --------------------------------------------------------------------------------------------------------------------
 
 ## Known issues
 
-1. **When using multiple screens**, if you move the application to a secondary screen, and later switch to using only the primary screen, the GUI will open off-screen. The remedy is to delete the `preferences.json` file created by the application before running the application again.
-2. **If you minimize the Help Window** and then run the `help` command (or use the `Help` menu, or the keyboard shortcut `F1`) again, the original Help Window will remain minimized, and no new Help Window will appear. The remedy is to manually restore the minimized Help Window.
+1. **Window position and size may be restored poorly after display changes.** If you move the app to another screen, change to a smaller screen, or use a lower resolution, the app may reopen partially or fully off-screen. The remedy is to delete the `preferences.json` file created by the application before running the application again.
+2. **If you minimize the Help Window** and then run the `help` command again (or use the `Help` menu, or the keyboard shortcut `F1`), the original Help Window will remain minimized, and no new Help Window will appear. The remedy is to manually restore the minimized Help Window.
+3. **Closing the app with the window close button behaves differently from using `exit`.** The latest window size and position may not be saved, and if the Help Window is still open, the application may continue running until that window is also closed.
+4. **Sample data on first launch is not written to disk immediately.** If no data file exists yet, the app starts with sample residents in memory. If you close the app immediately without running a successful command, `data/addressbook.json` may not be created yet.
+5. **Unsupported prefixes may sometimes lead to misleading error messages.** For example, using `c/` inside `add` is not supported, but the app may treat it as part of the previous field and report a room or tag format error instead of a clearer usage error.
 
 --------------------------------------------------------------------------------------------------------------------
 
