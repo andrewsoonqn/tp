@@ -191,13 +191,15 @@ Examples:
 
 ### Commenting on a resident: `comment`
 
-Adds, edits, or deletes a comment for a specific resident.
+Adds, updates, or deletes a comment for a specific resident.
 
 Format: `comment INDEX c/[COMMENT]`
 
 Expected Output:
-* When adding/updating:  
+* When adding a comment to a resident with no existing comment:  
   `Added comment to Person: NAME; ...`
+* When updating an existing comment:  
+  `Updated comment for Person: NAME; ...`
 * When deleting (empty comment):  
   `Removed comment from Person: NAME; ...`
 
@@ -205,7 +207,7 @@ Expected Output:
 
 **Note:**
 * The `INDEX` refers to the unique numbered position shown in the current list (via `list` or `find`). The `INDEX` must be a positive integer (1, 2, 3, …).
-* A new comment will overwrite any existing comment.
+* A non-empty comment adds a new note if the resident has no existing comment, and updates it otherwise.
 * To delete a comment, use `c/` with no text.
 * Leading and trailing spaces in comments are ignored.
 * If the comment only contains whitespace, it is treated as empty.
@@ -215,11 +217,11 @@ Expected Output:
 Examples:
 **Input → Expected Output**
 * `comment 1 c/Prefers WhatsApp messages before visits`  
-  → Adds a new comment to the 1st resident  
+  → Adds a new comment to the 1st resident; success message starts with `Added comment to Person:`  
 * `comment 2 c/Lost room key on 15 Mar`  
-  → Replaces existing comment  
+  → Replaces an existing comment; success message starts with `Updated comment for Person:`  
 * `comment 3 c/`  
-  → Deletes the existing comment  
+  → Deletes the existing comment; success message starts with `Removed comment from Person:`  
 
 <box type="warning" seamless>
 
@@ -496,4 +498,4 @@ _Details coming soon ..._
  **Find**    | `find KEYWORD [MORE_KEYWORDS]` or `find ROOM`<br> e.g., `find James Jake`, `find #14-203-D`                                                          
  **List**    | `list [-sort PREFIX]` <br> e.g., `list -sort r/`                                                                                                            
  **Help**    | `help`                                                                                                                                               
- **Comment** | `comment INDEX c/[COMMENT]`<br> e.g., `comment 1 c/Prefers WhatsApp messages before visits`, `comment 3 c/`                                            
+ **Comment** | `comment INDEX c/[COMMENT]`<br> e.g., `comment 1 c/Prefers WhatsApp messages before visits`, `comment 2 c/Lost room key on 15 Mar`, `comment 3 c/`    
