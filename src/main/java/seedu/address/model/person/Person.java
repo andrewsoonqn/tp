@@ -98,6 +98,7 @@ public class Person {
         }
 
         Person otherPerson = (Person) other;
+        assert otherPerson != null : "After instanceof check, otherPerson should not be null";
         return name.equals(otherPerson.name)
                 && phone.equals(otherPerson.phone)
                 && email.equals(otherPerson.email)

@@ -7,7 +7,6 @@ import java.util.Arrays;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
-import seedu.address.model.person.Room;
 import seedu.address.model.person.RoomEqualsPredicate;
 
 /**
@@ -28,9 +27,8 @@ public class FindCommandParser implements Parser<FindCommand> {
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
         }
 
-        if (Room.isValidRoom(trimmedArgs)) {
-            Room room = new Room(trimmedArgs);
-            return new FindCommand(new RoomEqualsPredicate(room));
+        if (trimmedArgs.startsWith("#")) {
+            return new FindCommand(new RoomEqualsPredicate(trimmedArgs));
         }
 
         String[] nameKeywords = trimmedArgs.split("\\s+");

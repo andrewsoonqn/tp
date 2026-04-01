@@ -69,6 +69,7 @@ public class Email {
         }
 
         Email otherEmail = (Email) other;
+        assert otherEmail != null : "After instanceof check, otherEmail should not be null";
         return value.equals(otherEmail.value);
     }
 

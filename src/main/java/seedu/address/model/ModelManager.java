@@ -99,12 +99,14 @@ public class ModelManager implements Model {
     @Override
     public void deletePerson(Person target) {
         addressBook.removePerson(target);
+        assert !addressBook.hasPerson(target) : "Person should not exist after deletePerson";
     }
 
     @Override
     public void addPerson(Person person) {
         addressBook.addPerson(person);
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        assert addressBook.hasPerson(person) : "Person should exist after addPerson";
     }
 
     @Override

@@ -46,6 +46,7 @@ public class UniquePersonList implements Iterable<Person> {
             throw new DuplicatePersonException();
         }
         internalList.add(toAdd);
+        assert internalList.contains(toAdd) : "Person should be in list after add";
     }
 
     /**
@@ -77,6 +78,7 @@ public class UniquePersonList implements Iterable<Person> {
         if (!internalList.remove(toRemove)) {
             throw new PersonNotFoundException();
         }
+        assert !internalList.contains(toRemove) : "Person should not be in list after remove";
     }
 
     public void setPersons(UniquePersonList replacement) {
@@ -101,6 +103,7 @@ public class UniquePersonList implements Iterable<Person> {
      * Returns the backing list as an unmodifiable {@code ObservableList}.
      */
     public ObservableList<Person> asUnmodifiableObservableList() {
+        assert internalUnmodifiableList != null;
         return internalUnmodifiableList;
     }
 

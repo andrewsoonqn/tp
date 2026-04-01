@@ -2,7 +2,9 @@ package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_SORT;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -12,6 +14,12 @@ import seedu.address.logic.parser.exceptions.ParseException;
  */
 public class ListCommandParser implements Parser<ListCommand> {
 
+    private static final String MESSAGE_INVALID_SORT_FIELD =
+            "Invalid sort field! Supported field prefixes: n/, r/, p/, e/";
+
+    private static final Pattern SORT_ARGUMENT_PATTERN =
+            Pattern.compile("\\s*-sort\\s+(?<field>\\S+)\\s*", Pattern.CASE_INSENSITIVE);
+
     /**
      * Parses the given {@code String} of arguments in the context of the ListCommand
      * and returns a ListCommand object for execution.
@@ -20,41 +28,34 @@ public class ListCommandParser implements Parser<ListCommand> {
      */
     public ListCommand parse(String args) throws ParseException {
         requireNonNull(args);
-        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_SORT);
-
-        // Reject any preamble text (e.g. "list abc s/name" should fail)
-        if (!argMultimap.getPreamble().isEmpty()) {
-            throw new ParseException(
-                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListCommand.MESSAGE_USAGE));
-        }
-
-        // If no sort prefix is provided, return a plain list command
-        if (argMultimap.getValue(PREFIX_SORT).isEmpty()) {
+        String trimmedArgs = args.trim();
+        if (trimmedArgs.isEmpty()) {
             return new ListCommand();
         }
 
-        // Ensure no duplicate sort prefixes (e.g. "list s/name s/room" should fail)
-        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_SORT);
-
-        String field = argMultimap.getValue(PREFIX_SORT).get().trim();
-        if (field.isEmpty()) {
+        Matcher matcher = SORT_ARGUMENT_PATTERN.matcher(trimmedArgs);
+        if (!matcher.matches()) {
             throw new ParseException(
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListCommand.MESSAGE_USAGE));
         }
 
-        switch (field.toLowerCase()) {
-        case "name":
+        String fieldPrefix = matcher.group("field").toLowerCase();
+        assert fieldPrefix.endsWith("/") : "Sort field should be a prefix token ending with '/'";
+        assert !fieldPrefix.isBlank() : "Sort field prefix should not be blank";
+
+        switch (fieldPrefix) {
+        case "n/":
             return new ListCommand("name", (p1, p2) -> p1.getName().fullName
                     .compareToIgnoreCase(p2.getName().fullName));
-        case "room":
+        case "r/":
             return new ListCommand("room", (p1, p2) -> p1.getRoom().compareTo(p2.getRoom()));
-        case "phone":
+        case "p/":
             return new ListCommand("phone", (p1, p2) -> p1.getPhone().value.compareTo(p2.getPhone().value));
-        case "email":
+        case "e/":
             return new ListCommand("email", (p1, p2) -> p1.getEmail().value
                     .compareToIgnoreCase(p2.getEmail().value));
         default:
-            throw new ParseException("Invalid sort field! Supported fields: name, room, phone, email");
+            throw new ParseException(MESSAGE_INVALID_SORT_FIELD);
         }
     }
 }

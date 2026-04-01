@@ -9,10 +9,12 @@ import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.CARL;
 import static seedu.address.testutil.TypicalPersons.ELLE;
 import static seedu.address.testutil.TypicalPersons.FIONA;
+import static seedu.address.testutil.TypicalPersons.GEORGE;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +22,6 @@ import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
-import seedu.address.model.person.Room;
 import seedu.address.model.person.RoomEqualsPredicate;
 
 /**
@@ -80,11 +81,26 @@ public class FindCommandTest {
     @Test
     public void execute_roomMatch_personFound() {
         String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 1);
-        RoomEqualsPredicate predicate = new RoomEqualsPredicate(new Room("#14-203-D"));
+        RoomEqualsPredicate predicate = new RoomEqualsPredicate("#14-2");
         FindCommand command = new FindCommand(predicate);
         expectedModel.updateFilteredPersonList(predicate);
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
         assertEquals(Collections.singletonList(ALICE), model.getFilteredPersonList());
+    }
+
+    @Test
+    public void execute_afterSort_resetsSortOrder() {
+        Comparator<seedu.address.model.person.Person> roomComparator = (p1, p2) ->
+                p1.getRoom().compareTo(p2.getRoom());
+        model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS, roomComparator);
+
+        String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 2);
+        NameContainsKeywordsPredicate predicate = preparePredicate("Alice George");
+        FindCommand command = new FindCommand(predicate);
+        expectedModel.updateFilteredPersonList(predicate);
+
+        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+        assertEquals(Arrays.asList(ALICE, GEORGE), model.getFilteredPersonList());
     }
 
     @Test

@@ -56,6 +56,7 @@ public class Name {
         }
 
         Name otherName = (Name) other;
+        assert otherName != null : "After instanceof check, otherName should not be null";
         return fullName.equals(otherName.fullName);
     }
 

@@ -1,5 +1,7 @@
 package seedu.address.storage;
 
+import java.util.logging.Logger;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -10,6 +12,8 @@ import seedu.address.model.tag.Tag;
  * Jackson-friendly version of {@link Tag}.
  */
 class JsonAdaptedTag {
+
+    private static final Logger logger = Logger.getLogger(JsonAdaptedTag.class.getName());
 
     private final String tagName;
 
@@ -25,7 +29,7 @@ class JsonAdaptedTag {
      * Converts a given {@code Tag} into this class for Jackson use.
      */
     public JsonAdaptedTag(Tag source) {
-        tagName = source.tagName;
+        tagName = source.tagType.getDisplayName();
     }
 
     @JsonValue
@@ -39,10 +43,11 @@ class JsonAdaptedTag {
      * @throws IllegalValueException if there were any data constraints violated in the adapted tag.
      */
     public Tag toModelType() throws IllegalValueException {
-        if (!Tag.isValidTagName(tagName)) {
+        try {
+            return new Tag(tagName.trim());
+        } catch (IllegalArgumentException e) {
+            logger.warning("Invalid tag in JSON: [" + tagName + "]");
             throw new IllegalValueException(Tag.MESSAGE_CONSTRAINTS);
         }
-        return new Tag(tagName);
     }
-
 }

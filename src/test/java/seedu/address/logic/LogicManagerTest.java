@@ -13,6 +13,7 @@ import static seedu.address.testutil.TypicalPersons.AMY;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.Path;
+import java.util.Comparator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,10 @@ import seedu.address.storage.StorageManager;
 import seedu.address.testutil.PersonBuilder;
 
 public class LogicManagerTest {
+
+    private static final Comparator<Person> NAME_SORT_COMPARATOR = (p1, p2) -> p1.getName().fullName
+            .compareToIgnoreCase(p2.getName().fullName);
+
     private static final IOException DUMMY_IO_EXCEPTION = new IOException("dummy IO exception");
     private static final IOException DUMMY_AD_EXCEPTION = new AccessDeniedException("dummy access denied exception");
 
@@ -68,6 +73,15 @@ public class LogicManagerTest {
     public void execute_validCommand_success() throws Exception {
         String listCommand = ListCommand.COMMAND_WORD;
         assertCommandSuccess(listCommand, ListCommand.MESSAGE_SUCCESS, model);
+    }
+
+    @Test
+    public void execute_listSortCommand_success() throws Exception {
+        String input = ListCommand.COMMAND_WORD + " -sort n/";
+        String expectedMessage = String.format(ListCommand.MESSAGE_SUCCESS_SORTED, "name");
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        expectedModel.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS, NAME_SORT_COMPARATOR);
+        assertCommandSuccess(input, expectedMessage, expectedModel);
     }
 
     @Test

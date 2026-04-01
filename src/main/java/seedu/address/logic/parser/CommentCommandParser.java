@@ -4,6 +4,9 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_COMMENT;
 
+import java.util.logging.Logger;
+
+import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.CommentCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -15,6 +18,8 @@ import seedu.address.model.person.Comment;
  * Parses input arguments and creates a new CommentCommand object
  */
 public class CommentCommandParser implements Parser<CommentCommand> {
+    private static final Logger logger = LogsCenter.getLogger(CommentCommandParser.class);
+
     @Override
     public CommentCommand parse(String userInput) throws ParseException {
         requireNonNull(userInput);
@@ -27,6 +32,7 @@ public class CommentCommandParser implements Parser<CommentCommand> {
         try {
             index = ParserUtil.parseIndex(argMultimap.getPreamble());
         } catch (ParseException pe) {
+            logger.warning("Failed to parse index: invalid index format");
             throw new ParseException(invalidCommandFormatMessage, pe);
         }
 
@@ -42,6 +48,7 @@ public class CommentCommandParser implements Parser<CommentCommand> {
         }
         Comment comment = new Comment(commentText);
 
+        logger.info("Successfully parsed comment command: index=" + index.getOneBased());
         return new CommentCommand(index, comment);
     }
 }
