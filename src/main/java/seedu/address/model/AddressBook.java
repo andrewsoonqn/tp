@@ -11,8 +11,8 @@ import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
+import seedu.address.model.tag.CustomTagRegistry;
 import seedu.address.model.tag.Tag;
-import seedu.address.model.tag.TagRegistry;
 
 /**
  * Wraps all data at the address-book level
@@ -21,7 +21,7 @@ import seedu.address.model.tag.TagRegistry;
 public class AddressBook implements ReadOnlyAddressBook {
 
     private final UniquePersonList persons;
-    private final TagRegistry tagRegistry;
+    private final CustomTagRegistry customTagRegistry;
 
     /*
      * The 'unusual' code block below is a non-static initialization block, sometimes used to avoid duplication
@@ -32,7 +32,7 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     {
         persons = new UniquePersonList();
-        tagRegistry = new TagRegistry();
+        customTagRegistry = new CustomTagRegistry();
     }
 
     public AddressBook() {
@@ -62,7 +62,7 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public void setCustomTags(Collection<Tag> tags) {
         requireNonNull(tags);
-        tagRegistry.setCustomTags(tags);
+        customTagRegistry.setCustomTags(tags);
     }
 
     /**
@@ -120,7 +120,7 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public boolean hasTag(Tag tag) {
         requireNonNull(tag);
-        return tagRegistry.contains(tag);
+        return customTagRegistry.contains(tag);
     }
 
     /**
@@ -128,7 +128,7 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public void addCustomTags(Collection<Tag> tags) {
         requireNonNull(tags);
-        tagRegistry.registerAll(tags);
+        customTagRegistry.registerAll(tags);
     }
 
     private void registerCustomTags(Collection<Tag> tags) {
@@ -158,7 +158,7 @@ public class AddressBook implements ReadOnlyAddressBook {
 
     @Override
     public Set<Tag> getCustomTagList() {
-        return tagRegistry.getCustomTags();
+        return customTagRegistry.getCustomTags();
     }
 
     @Override
@@ -174,11 +174,11 @@ public class AddressBook implements ReadOnlyAddressBook {
 
         AddressBook otherAddressBook = (AddressBook) other;
         return persons.equals(otherAddressBook.persons)
-                && tagRegistry.equals(otherAddressBook.tagRegistry);
+                && customTagRegistry.equals(otherAddressBook.customTagRegistry);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(persons, tagRegistry);
+        return Objects.hash(persons, customTagRegistry);
     }
 }
