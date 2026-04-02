@@ -27,15 +27,15 @@ public class TypicalPersons {
     public static final Person ALICE = new PersonBuilder().withName("Alice Pauline")
             .withRoom("#14-203-D").withEmail("alice@example.com")
             .withPhone("94351253")
-            .withTags("Halal").build();
+            .withTags("halal").build();
     public static final Person BENSON = new PersonBuilder().withName("Benson Meier")
             .withRoom("#3-118-A")
             .withEmail("johnd@example.com").withPhone("98765432")
-            .withTags("Vegetarian", "Allergies").build();
+            .withTags("vegetarian", "allergies").build();
     public static final Person CARL = new PersonBuilder().withName("Carl Kurz").withPhone("95352563")
             .withEmail("heinz@example.com").withRoom("#11-004-C").build();
     public static final Person DANIEL = new PersonBuilder().withName("Daniel Meier").withPhone("87652533")
-            .withEmail("cornelia@example.com").withRoom("#9-999-Z").withTags("Vegan").build();
+            .withEmail("cornelia@example.com").withRoom("#9-999-Z").withTags("vegan").build();
     public static final Person ELLE = new PersonBuilder().withName("Elle Meyer").withPhone("9482224")
             .withEmail("werner@example.com").withRoom("#2-010-B").build();
     public static final Person FIONA = new PersonBuilder().withName("Fiona Kunz").withPhone("9482427")
@@ -44,7 +44,7 @@ public class TypicalPersons {
             .withEmail("anna@example.com").withRoom("#1-001-A").build();
     public static final Person HANNAH = new PersonBuilder().withName("Hannah Lim").withPhone("91234567")
             .withEmail("hannah@example.com").withRoom("#8-108-B").withComment(VALID_COMMENT_HANNAH)
-            .withTags("Allergies").build();
+            .withTags("allergies").build();
 
     // Manually added
     public static final Person HOON = new PersonBuilder().withName("Hoon Meier").withPhone("8482424")

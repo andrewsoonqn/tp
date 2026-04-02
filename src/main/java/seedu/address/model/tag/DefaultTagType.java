@@ -4,10 +4,10 @@ package seedu.address.model.tag;
  * Enumeration of built-in tag types.
  */
 public enum DefaultTagType {
-    VEGETARIAN("Vegetarian"),
-    VEGAN("Vegan"),
-    HALAL("Halal"),
-    ALLERGIES("Allergies");
+    VEGETARIAN("vegetarian"),
+    VEGAN("vegan"),
+    HALAL("halal"),
+    ALLERGIES("allergies");
 
     private final String displayName;
 
@@ -20,19 +20,19 @@ public enum DefaultTagType {
     }
 
     /**
-     * Converts a string to a built-in tag type (case-insensitive).
+     * Converts a string to a built-in tag type.
      */
     public static DefaultTagType fromString(String input) {
         assert input != null : "Tag input should not be null";
         String normalized = input.trim();
 
         for (DefaultTagType type : DefaultTagType.values()) {
-            if (type.displayName.equalsIgnoreCase(normalized)) {
+            if (type.displayName.equals(normalized)) {
                 return type;
             }
         }
         throw new IllegalArgumentException(
-                "Tags must be one of the following: Vegetarian, Vegan, Halal, Allergies");
+                "Tags must be one of the following: vegetarian, vegan, halal, allergies");
     }
 
     /**

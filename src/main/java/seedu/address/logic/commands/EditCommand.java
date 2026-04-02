@@ -61,7 +61,7 @@ public class EditCommand extends Command {
             + "[" + PREFIX_NEWTAG + "]\n"
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_PHONE + "91234567 "
-            + PREFIX_TAG + "Study Group "
+            + PREFIX_TAG + "study-group "
             + PREFIX_NEWTAG;
 
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Person: %1$s";

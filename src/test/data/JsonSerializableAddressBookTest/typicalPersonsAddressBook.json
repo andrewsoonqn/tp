@@ -7,7 +7,7 @@
       "email": "alice@example.com",
       "room": "#14-203-D",
       "tags": [
-        "Halal"
+        "halal"
       ]
     },
     {
@@ -16,8 +16,8 @@
       "email": "johnd@example.com",
       "room": "#3-118-A",
       "tags": [
-        "Vegetarian",
-        "Allergies"
+        "vegetarian",
+        "allergies"
       ]
     },
     {
@@ -33,7 +33,7 @@
       "email": "cornelia@example.com",
       "room": "#9-999-Z",
       "tags": [
-        "Vegan"
+        "vegan"
       ]
     },
     {
@@ -64,7 +64,7 @@
       "room": "#8-108-B",
       "comment": "Prefers morning appointments",
       "tags": [
-        "Allergies"
+        "allergies"
       ]
     }
   ]
