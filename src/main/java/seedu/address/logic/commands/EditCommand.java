@@ -3,6 +3,7 @@ package seedu.address.logic.commands;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_NEWTAG;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ROOM;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
@@ -48,24 +49,50 @@ public class EditCommand extends Command {
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_PHONE + "91234567 "
             + PREFIX_EMAIL + "johndoe@example.com";
+    public static final String MESSAGE_USAGE_WITH_NEWTAG = COMMAND_WORD + ": Edits the details of the person "
+            + "identified by the index number used in the displayed person list, including creating new tag(s). "
+            + "Existing values will be overwritten by the input values.\n"
+            + "Parameters: INDEX (must be a positive integer) "
+            + "[" + PREFIX_NAME + "NAME] "
+            + "[" + PREFIX_PHONE + "PHONE] "
+            + "[" + PREFIX_EMAIL + "EMAIL] "
+            + "[" + PREFIX_ROOM + "ROOM] "
+            + "[" + PREFIX_TAG + "TAG]... "
+            + "[" + PREFIX_NEWTAG + "]\n"
+            + "Example: " + COMMAND_WORD + " 1 "
+            + PREFIX_PHONE + "91234567 "
+            + PREFIX_TAG + "Study Group "
+            + PREFIX_NEWTAG;
 
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Person: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
     public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book.";
+    public static final String MESSAGE_UNKNOWN_TAGS = TagCommandUtil.MESSAGE_UNKNOWN_TAGS;
 
     private final Index index;
     private final EditPersonDescriptor editPersonDescriptor;
+    private final boolean shouldCreateNewTags;
 
     /**
      * @param index of the person in the filtered person list to edit
      * @param editPersonDescriptor details to edit the person with
      */
     public EditCommand(Index index, EditPersonDescriptor editPersonDescriptor) {
+        this(index, editPersonDescriptor, false);
+    }
+
+    /**
+     * @param index of the person in the filtered person list to edit
+     * @param editPersonDescriptor details to edit the person with
+     * @param shouldCreateNewTags whether new tags should be created if needed
+     */
+    public EditCommand(Index index, EditPersonDescriptor editPersonDescriptor, boolean shouldCreateNewTags) {
         requireNonNull(index);
         requireNonNull(editPersonDescriptor);
 
         this.index = index;
         this.editPersonDescriptor = new EditPersonDescriptor(editPersonDescriptor);
+        this.shouldCreateNewTags = shouldCreateNewTags;
     }
 
     /**
@@ -99,10 +126,21 @@ public class EditCommand extends Command {
         Person personToEdit = lastShownList.get(index.getZeroBased());
         Person editedPerson = createEditedPerson(personToEdit, editPersonDescriptor);
 
+        // No need to validate if no tags are provided
+        if (editPersonDescriptor.getTags().isPresent()) {
+            TagCommandUtil.validateKnownTags(model, editPersonDescriptor.getTags().get(),
+                    shouldCreateNewTags, MESSAGE_USAGE_WITH_NEWTAG);
+        }
+
         if (!personToEdit.isSamePerson(editedPerson) && model.hasPerson(editedPerson)) {
             throw new CommandException(MESSAGE_DUPLICATE_PERSON);
         }
 
+        if (shouldCreateNewTags && editPersonDescriptor.getTags().isPresent()) {
+            // Only register new custom tags when explicitly requested (shouldCreateNewTags)
+            // No need to register custom tags if no tags are provided
+            model.addCustomTags(editPersonDescriptor.getTags().get());
+        }
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));
@@ -121,7 +159,8 @@ public class EditCommand extends Command {
 
         EditCommand otherEditCommand = (EditCommand) other;
         return index.equals(otherEditCommand.index)
-                && editPersonDescriptor.equals(otherEditCommand.editPersonDescriptor);
+                && editPersonDescriptor.equals(otherEditCommand.editPersonDescriptor)
+                && shouldCreateNewTags == otherEditCommand.shouldCreateNewTags;
     }
 
     @Override
@@ -129,6 +168,7 @@ public class EditCommand extends Command {
         return new ToStringBuilder(this)
                 .add("index", index)
                 .add("editPersonDescriptor", editPersonDescriptor)
+                .add("shouldCreateNewTags", shouldCreateNewTags)
                 .toString();
     }
 
