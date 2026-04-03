@@ -3,8 +3,6 @@ package seedu.address.model.tag;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
-import java.util.logging.Logger;
-
 /**
  * Represents a Tag in the address book.
  * Guarantees: immutable; name is valid as declared in {@link #isValidTagName(String)}
@@ -12,11 +10,11 @@ import java.util.logging.Logger;
 public class Tag {
 
     public static final String MESSAGE_CONSTRAINTS =
-        "Tags must be one of the following: Vegetarian, Vegan, Halal, Allergies";
+            "Tags should only contain letters, numbers, spaces, and hyphens, and it should not be blank. "
+                    + "Kebab-case is recommended for consistency.";
+    private static final String VALIDATION_REGEX = "[A-Za-z0-9][A-Za-z0-9 -]*";
 
-    private static final Logger logger = Logger.getLogger(Tag.class.getName());
-
-    public final TagType tagType;
+    private final String tagName;
 
     /**
      * Constructs a {@code Tag}.
@@ -25,26 +23,37 @@ public class Tag {
      */
     public Tag(String tagName) {
         requireNonNull(tagName);
-        checkArgument(isValidTagName(tagName), MESSAGE_CONSTRAINTS);
-        this.tagType = TagType.fromString(tagName);
-        logger.fine("Created tag: [" + tagType.getDisplayName() + "]");
+        String trimmedTagName = tagName.trim();
+        checkArgument(isValidTagName(trimmedTagName), MESSAGE_CONSTRAINTS);
 
-        assert tagType != null : "TagType should never be null after parsing";
+        if (DefaultTagEnum.isDefaultTagName(trimmedTagName)) {
+            this.tagName = DefaultTagEnum.fromString(trimmedTagName).getDisplayName();
+        } else {
+            this.tagName = trimmedTagName;
+        }
     }
 
     /**
      * Returns true if a given string is a valid tag name.
      */
     public static boolean isValidTagName(String test) throws NullPointerException {
-        if (test == null) {
-            throw new NullPointerException("Tag name cannot be null");
-        }
-        try {
-            TagType.fromString(test);
-            return true;
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
+        requireNonNull(test);
+        String trimmedTagName = test.trim();
+        return !trimmedTagName.isEmpty() && trimmedTagName.matches(VALIDATION_REGEX);
+    }
+
+    /**
+     * Returns the display name of the tag.
+     */
+    public String getTagName() {
+        return tagName;
+    }
+
+    /**
+     * Returns true if this tag is one of the built-in default tags.
+     */
+    public boolean isBuiltInTag() {
+        return DefaultTagEnum.isDefaultTagName(tagName);
     }
 
     @Override
@@ -59,19 +68,19 @@ public class Tag {
         }
 
         Tag otherTag = (Tag) other;
-        return tagType.equals(otherTag.tagType);
+        return tagName.equals(otherTag.tagName);
     }
 
     @Override
     public int hashCode() {
-        return tagType.hashCode();
+        return tagName.hashCode();
     }
 
     /**
      * Format state as text for viewing.
      */
     public String toString() {
-        return '[' + tagType.getDisplayName() + ']';
+        return '[' + tagName + ']';
     }
 
 }

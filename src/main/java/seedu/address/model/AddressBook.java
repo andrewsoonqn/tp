@@ -2,12 +2,17 @@ package seedu.address.model;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
+import seedu.address.model.tag.CustomTagRegistry;
+import seedu.address.model.tag.Tag;
 
 /**
  * Wraps all data at the address-book level
@@ -16,6 +21,7 @@ import seedu.address.model.person.UniquePersonList;
 public class AddressBook implements ReadOnlyAddressBook {
 
     private final UniquePersonList persons;
+    private final CustomTagRegistry customTagRegistry;
 
     /*
      * The 'unusual' code block below is a non-static initialization block, sometimes used to avoid duplication
@@ -26,6 +32,7 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     {
         persons = new UniquePersonList();
+        customTagRegistry = new CustomTagRegistry();
     }
 
     public AddressBook() {
@@ -47,6 +54,15 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public void setPersons(List<Person> persons) {
         this.persons.setPersons(persons);
+        registerCustomTagsFromPersons(persons);
+    }
+
+    /**
+     * Replaces the contents of the custom tag set with {@code tags}.
+     */
+    public void setCustomTags(Collection<Tag> tags) {
+        requireNonNull(tags);
+        customTagRegistry.setCustomTags(tags);
     }
 
     /**
@@ -55,7 +71,9 @@ public class AddressBook implements ReadOnlyAddressBook {
     public void resetData(ReadOnlyAddressBook newData) {
         requireNonNull(newData);
 
-        setPersons(newData.getPersonList());
+        persons.setPersons(newData.getPersonList());
+        setCustomTags(newData.getCustomTagList());
+        registerCustomTagsFromPersons(newData.getPersonList());
     }
 
     //// person-level operations
@@ -74,6 +92,7 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public void addPerson(Person p) {
         persons.add(p);
+        registerCustomTags(p.getTags());
     }
 
     /**
@@ -85,6 +104,7 @@ public class AddressBook implements ReadOnlyAddressBook {
         requireNonNull(editedPerson);
 
         persons.setPerson(target, editedPerson);
+        registerCustomTags(editedPerson.getTags());
     }
 
     /**
@@ -95,7 +115,34 @@ public class AddressBook implements ReadOnlyAddressBook {
         persons.remove(key);
     }
 
-    /// / util methods
+    /**
+     * Returns true if the tag exists as a default tag or a previously created custom tag.
+     */
+    public boolean hasTag(Tag tag) {
+        requireNonNull(tag);
+        return customTagRegistry.contains(tag);
+    }
+
+    /**
+     * Adds the given tags to the custom tag set.
+     */
+    public void addCustomTags(Collection<Tag> tags) {
+        requireNonNull(tags);
+        customTagRegistry.registerAll(tags);
+    }
+
+    private void registerCustomTags(Collection<Tag> tags) {
+        addCustomTags(tags);
+    }
+
+    // If a person already has a custom tag, that tag should count as existing
+    private void registerCustomTagsFromPersons(Collection<Person> persons) {
+        persons.stream()
+                .map(Person::getTags)
+                .forEach(this::registerCustomTags);
+    }
+
+    //// util methods
 
     @Override
     public String toString() {
@@ -110,6 +157,11 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     @Override
+    public Set<Tag> getCustomTagList() {
+        return customTagRegistry.getCustomTags();
+    }
+
+    @Override
     public boolean equals(Object other) {
         if (other == this) {
             return true;
@@ -121,11 +173,12 @@ public class AddressBook implements ReadOnlyAddressBook {
         }
 
         AddressBook otherAddressBook = (AddressBook) other;
-        return persons.equals(otherAddressBook.persons);
+        return persons.equals(otherAddressBook.persons)
+                && customTagRegistry.equals(otherAddressBook.customTagRegistry);
     }
 
     @Override
     public int hashCode() {
-        return persons.hashCode();
+        return Objects.hash(persons, customTagRegistry);
     }
 }

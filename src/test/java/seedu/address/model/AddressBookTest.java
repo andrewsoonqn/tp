@@ -12,7 +12,9 @@ import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +22,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
+import seedu.address.model.tag.Tag;
 import seedu.address.testutil.PersonBuilder;
 
 public class AddressBookTest {
@@ -29,6 +32,7 @@ public class AddressBookTest {
     @Test
     public void constructor() {
         assertEquals(Collections.emptyList(), addressBook.getPersonList());
+        assertEquals(Collections.emptySet(), addressBook.getCustomTagList());
     }
 
     @Test
@@ -79,6 +83,16 @@ public class AddressBookTest {
     }
 
     @Test
+    public void addPerson_customTag_registersCustomTag() {
+        Person customTaggedPerson = new PersonBuilder().withTags("study-group").build();
+
+        addressBook.addPerson(customTaggedPerson);
+
+        assertTrue(addressBook.hasTag(new Tag("study-group")));
+        assertEquals(Set.of(new Tag("study-group")), addressBook.getCustomTagList());
+    }
+
+    @Test
     public void getPersonList_modifyList_throwsUnsupportedOperationException() {
         assertThrows(UnsupportedOperationException.class, () -> addressBook.getPersonList().remove(0));
     }
@@ -94,6 +108,7 @@ public class AddressBookTest {
      */
     private static class AddressBookStub implements ReadOnlyAddressBook {
         private final ObservableList<Person> persons = FXCollections.observableArrayList();
+        private final Set<Tag> customTags = new HashSet<>();
 
         AddressBookStub(Collection<Person> persons) {
             this.persons.setAll(persons);
@@ -102,6 +117,11 @@ public class AddressBookTest {
         @Override
         public ObservableList<Person> getPersonList() {
             return persons;
+        }
+
+        @Override
+        public Set<Tag> getCustomTagList() {
+            return customTags;
         }
     }
 

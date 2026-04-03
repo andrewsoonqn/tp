@@ -125,6 +125,8 @@ How the parsing works:
 The `Model` component,
 
 * stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object). Each `Person` stores immutable values for `Name`, `Phone`, `Email`, `Room`, `Comment`, and tags.
+* stores a `CustomTagRegistry` inside `AddressBook` to track user-created tags separately from each `Person`.
+* treats tag names as exact, case-sensitive values. There is no automatic tag normalization; kebab-case is a usage convention rather than a storage rule.
 * stores the currently 'selected' `Person` objects (e.g., results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
 * stores a `UserPref` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
 * does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
@@ -147,6 +149,7 @@ The `Model` component,
 The `Storage` component,
 * can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
 * persists each person's comment in the JSON data file and loads missing `comment` fields as empty comments to preserve compatibility with older saved data.
+* persists the custom tag registry separately as `customTags`, while also rebuilding missing custom-tag entries from loaded persons so the in-memory model stays usable even if the file is stale.
 * inherits from both `AddressBookStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
 * depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
 
@@ -274,6 +277,39 @@ The implementation relies on JavaFX's `SortedList`, which is initialized in `Mod
 *   **Choice (current):** Sort order is reset when a new filter is applied unless specified via `list -sort <prefix>/`.
     *   Pros: Predictable behavior; users always see the list state they explicitly requested.
     *   Cons: Users cannot "keep" a sort order while performing multiple different searches without re-specifying the sort field.
+
+### Tag management
+
+#### Implementation
+
+The tag model separates three concerns: tag identity, built-in tag definitions, and custom-tag existence.
+
+1. `Tag` remains an immutable value object that stores the displayed tag name and uses exact string equality. This makes tag behavior predictable: `study-group` and `Study-Group` are different tags.
+2. `DefaultTagEnum` defines the built-in tags (`vegetarian`, `vegan`, `halal`, `allergies`). These are treated as known immediately, but they follow the same case-sensitive matching rule as custom tags.
+3. `CustomTagRegistry` tracks which custom tags currently exist in an `AddressBook`. This keeps "does this tag exist already?" in the model layer instead of inside `Tag`.
+4. `add` and `edit` only register unknown custom tags when the user explicitly supplies `-newtag`. Without that flag, both commands reject unknown tags consistently.
+5. Shared helpers, `ParserUtil.parseBooleanFlag(...)` and `TagCommandUtil.validateKnownTags(...)`, keep `-newtag` parsing and tag validation aligned between `add` and `edit`.
+6. During loading and person updates, `AddressBook` also registers custom tags found on persons. This keeps the in-memory registry consistent even if the stored `customTags` list is incomplete.
+
+#### Design considerations
+
+**Aspect: Where tag existence should be tracked**
+
+* **Choice (current):** Store tag existence in `CustomTagRegistry`, while `Tag` only represents a value.
+  * Pros: Keeps the value object simple and reusable; avoids spreading tag-existence logic across commands and model classes.
+  * Cons: Introduces one more model concept that must stay synchronized with resident data.
+
+**Aspect: How tag casing should work**
+
+* **Choice (current):** Use exact, case-sensitive tag identity for both built-in and custom tags.
+  * Pros: Matches a branch-like mental model; avoids hidden normalization or silent rewriting of user input.
+  * Cons: Makes near-duplicate tags easier to create if users are inconsistent with capitalization.
+
+**Aspect: How to handle incomplete `customTags` data from storage**
+
+* **Choice (current):** Repair the registry in memory from loaded persons, and persist the repaired registry on the next successful save.
+  * Pros: Keeps runtime behavior correct without adding immediate load-time writeback.
+  * Cons: The JSON file can remain temporarily stale until a later successful command triggers saving.
 
 
 --------------------------------------------------------------------------------------------------------------------

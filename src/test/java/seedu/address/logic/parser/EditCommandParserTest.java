@@ -9,12 +9,14 @@ import static seedu.address.logic.commands.CommandTestUtil.INVALID_PHONE_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_ROOM_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_TAG_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_AMY;
+import static seedu.address.logic.commands.CommandTestUtil.NEWTAG_FLAG;
 import static seedu.address.logic.commands.CommandTestUtil.PHONE_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.PHONE_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.ROOM_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.ROOM_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.TAG_DESC_ALLERGIES;
 import static seedu.address.logic.commands.CommandTestUtil.TAG_DESC_HALAL;
+import static seedu.address.logic.commands.CommandTestUtil.TAG_DESC_STUDY_GROUP;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_AMY;
@@ -22,7 +24,9 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_ROOM_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_ALLERGIES;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HALAL;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_STUDY_GROUP;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_NEWTAG;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ROOM;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
@@ -161,6 +165,12 @@ public class EditCommandParserTest {
         descriptor = new EditPersonDescriptorBuilder().withTags(VALID_TAG_HALAL).build();
         expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
+
+        // custom tag with -newtag
+        userInput = targetIndex.getOneBased() + TAG_DESC_STUDY_GROUP + NEWTAG_FLAG;
+        descriptor = new EditPersonDescriptorBuilder().withTags(VALID_TAG_STUDY_GROUP).build();
+        expectedCommand = new EditCommand(targetIndex, descriptor, true);
+        assertParseSuccess(parser, userInput, expectedCommand);
     }
 
     @Test
@@ -193,6 +203,9 @@ public class EditCommandParserTest {
 
         assertParseFailure(parser, userInput,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ROOM));
+
+        userInput = targetIndex.getOneBased() + TAG_DESC_STUDY_GROUP + NEWTAG_FLAG + NEWTAG_FLAG;
+        assertParseFailure(parser, userInput, Messages.getErrorMessageForDuplicatePrefixes(PREFIX_NEWTAG));
     }
 
     @Test
@@ -204,5 +217,11 @@ public class EditCommandParserTest {
         EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
 
         assertParseSuccess(parser, userInput, expectedCommand);
+    }
+
+    @Test
+    public void parse_newTagFlagWithValue_failure() {
+        assertParseFailure(parser, "1" + TAG_DESC_STUDY_GROUP + NEWTAG_FLAG + " unexpected",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
     }
 }

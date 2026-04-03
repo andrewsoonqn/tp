@@ -58,13 +58,22 @@
   e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
 
 * Items in square brackets are optional.<br>
-  e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/friend` or as `n/John Doe`.
+  e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/halal` or as `n/John Doe`.
 
 * Items with `…`​ after them can be used multiple times including zero times.<br>
-  e.g. `[t/TAG]…​` can be used as ` ` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
+  e.g. `[t/TAG]…​` can be used as ` ` (i.e. 0 times), `t/halal`, `t/halal t/allergies` etc.
 
 * Parameters can be in any order.<br>
   e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
+
+* Dash-based inputs are options.<br>
+  Some options take a value, while others are standalone flags.
+
+* Options that take a value must be followed by one.<br>
+  e.g. `-sort PREFIX` can be used as `-sort n/`.
+
+* Some options are standalone flags which do not take a value.<br>
+  e.g. `-newtag` should be entered by itself, not as `-newtag yes`.
 
 * For commands that accept multiple values in one parameter, use comma-separated input.<br>
   e.g. `delete 1,3,5` deletes residents at indices 1, 3, and 5.
@@ -110,16 +119,51 @@ After inputing `help`:
 
 Adds a person to the address book.
 
-Format: `add n/NAME [p/PHONE] [e/EMAIL] r/ROOM [t/TAG]…​`
+Format: `add n/NAME [p/PHONE] [e/EMAIL] r/ROOM [t/TAG]…​ [-newtag]`
 
 <box type="tip" seamless>
 
 **Tip:** A person can have any number of tags (including 0)
 </box>
 
+<box type="info" seamless>
+
+**Note:**
+* Built-in tags are `vegetarian`, `vegan`, `halal`, and `allergies`.
+* All tags are case-sensitive. For example, `study-group` and `Study-Group` are treated as different tags.
+* Kebab-case is recommended for consistency, e.g. `study-group`.
+* To create a new custom tag while adding a resident, include `-newtag` in the same command.
+* If you include `-newtag` for a tag that already exists, RACE will still accept the command. No duplicate tag is created.
+
+</box>
+
 Examples:
 * `add n/John Doe p/98765432 e/e1234567@u.nus.edu r/#14-203-D`
-* `add n/Betsy Crowe t/friend e/e4567890@u.nus.edu r/#10-10 p/1234567 t/vegetarian`
+* `add n/Betsy Crowe t/vegetarian e/e4567890@u.nus.edu r/#10-10 p/1234567 t/allergies`
+* `add n/Alex Tan r/#12-101 p/91234567 t/study-group -newtag`
+
+---
+
+### Working with tags
+
+Tags help you label residents with quick categories or notes.
+
+<box type="info" seamless>
+
+**Note:**
+* The four built-in tags are always available: `vegetarian`, `vegan`, `halal`, `allergies`.
+* Any other tag is treated as a custom tag.
+* Custom tags must already exist before you can reuse them.
+* If you want to introduce a brand-new custom tag, use `-newtag` together with `add` or `edit`.
+* If you use `-newtag` for an already existing tag, the command still succeeds normally.
+
+</box>
+
+Examples:
+* `add n/Sam Lee r/#08-110 t/halal` uses a built-in tag.
+* `add n/Sam Lee r/#08-110 t/study-group -newtag` creates and uses a new custom tag.
+* `edit 2 t/study-group` reuses an existing custom tag.
+* `edit 2 t/Study-Group -newtag` creates a different tag from `study-group` because tags are case-sensitive.
 
 ---
 
@@ -176,7 +220,7 @@ Input → Expected Output
 
 Edits an existing person in the address book.
 
-Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [r/ROOM] [t/TAG]…​`
+Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [r/ROOM] [t/TAG]…​ [-newtag]`
 
 * Edits the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
 * At least one of the optional fields must be provided.
@@ -184,10 +228,12 @@ Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [r/ROOM] [t/TAG]…​`
 * When editing tags, the existing tags of the person will be removed i.e adding of tags is not cumulative.
 * You can remove all the person’s tags by typing `t/` without
     specifying any tags after it.
+* If the edited tags include a brand-new custom tag, include `-newtag` in the same command.
 
 Examples:
 *  `edit 1 p/91234567 e/e1222222@u.nus.edu` Edits the phone number and email address of the 1st person to be `91234567` and `e1222222@u.nus.edu` respectively.
 *  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
+*  `edit 3 t/project-team -newtag` Replaces the 3rd person's tags with `project-team` and creates that custom tag if needed.
 
 ### Commenting on a resident: `comment`
 
@@ -426,6 +472,7 @@ AddressBook data are saved automatically as a JSON file `[JAR file location]/dat
 **Caution:**
 If your changes to the data file makes its format invalid, AddressBook will discard all data and start with an empty data file at the next run.  Hence, it is recommended to take a backup of the file before editing it.<br>
 Furthermore, certain edits can cause the AddressBook to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
+If you edit tags manually, keep the `customTags` list aligned with the custom tags used by residents. If they do not match, RACE repairs this in memory when it loads and writes the corrected version back on the next successful save.
 </box>
 
 ### Archiving data files `[coming in v2.0]`
@@ -453,6 +500,15 @@ _Details coming soon ..._
 **A**: No. The app treats residents with the same name as duplicates, even if their other details are different. Try adding unique qualifiers to the name, e.g., `Alex Tan (Block 14)` and `Alex Tan (Block 9)`.
 **Q**: Can I delete more than one resident at once?<br>
 **A**: Yes. You can delete multiple residents in one command by providing multiple indices.
+
+**Q**: How do I create a new custom tag?<br>
+**A**: Use `-newtag` together with `add` or `edit`. For example, `add n/Sam Lee r/#08-110 t/study-group -newtag` creates `study-group` if it does not already exist.
+
+**Q**: Are tags case-sensitive?<br>
+**A**: Yes. `study-group` and `Study-Group` are treated as different tags. For consistency, we recommend entering tags in kebab-case.
+
+**Q**: What happens if I use `-newtag` for a tag that already exists?<br>
+**A**: Nothing extra happens. The command still works normally, and RACE simply reuses the existing tag.
 
 ### Saving and data
 
@@ -489,10 +545,10 @@ _Details coming soon ..._
 
  Action      | Format, Examples                                                                                                                                     
 -------------|------------------------------------------------------------------------------------------------------------------------------------------------------
- **Add**     | `add n/NAME [p/PHONE] [e/EMAIL] [r/ROOM [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/e1234567@u.nus.edu r/#14-203-D t/friend t/colleague` 
+ **Add**     | `add n/NAME [p/PHONE] [e/EMAIL] r/ROOM [t/TAG]…​ [-newtag]` <br> e.g., `add n/James Ho p/22224444 e/e1234567@u.nus.edu r/#14-203-D t/study-group -newtag` 
  **Clear**   | `clear`                                                                                                                                              
  **Delete**  | `delete INDEX`<br> e.g., `delete 3`                                                                                                                  
- **Edit**    | `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [r/ROOM] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/e1234567@u.nus.edu`                            
+ **Edit**    | `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [r/ROOM] [t/TAG]…​ [-newtag]`<br> e.g.,`edit 2 n/James Lee t/project-team -newtag`                            
  **Find**    | `find KEYWORD [MORE_KEYWORDS]` or `find ROOM`<br> e.g., `find James Jake`, `find #14-203-D`                                                          
  **List**    | `list [-sort PREFIX]` <br> e.g., `list -sort r/`                                                                                                            
  **Help**    | `help`                                                                                                                                               
