@@ -584,7 +584,7 @@ testers are expected to do more *exploratory* testing.
    1. Prerequisites: Multiple residents with different names, rooms, and phone numbers.
    
    1. Test case: `list -sort r/`<br>
-      Expected: List is updated to show all residents sorted by room number (format: #BLOCK-ROOM-LETTER). Status message confirms sorting.
+      Expected: List is updated to show all residents sorted by room number (format: #BLOCK-ROOM[-LETTER]). Status message confirms sorting.
 
    1. Test case: `list -sort p/`<br>
       Expected: List is updated to show all residents sorted by their phone numbers.
