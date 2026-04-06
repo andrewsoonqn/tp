@@ -26,10 +26,6 @@ public class ListCommandTest {
             .compareToIgnoreCase(p2.getName().fullName);
     private static final Comparator<Person> ROOM_COMPARATOR = (p1, p2) -> p1.getRoom()
             .compareTo(p2.getRoom());
-    private static final Comparator<Person> PHONE_COMPARATOR = (p1, p2) -> p1.getPhone().value
-            .compareTo(p2.getPhone().value);
-    private static final Comparator<Person> EMAIL_COMPARATOR = (p1, p2) -> p1.getEmail().value
-            .compareToIgnoreCase(p2.getEmail().value);
 
     private Model model;
     private Model expectedModel;
@@ -64,22 +60,6 @@ public class ListCommandTest {
         ListCommand listCommand = new ListCommand("room", ROOM_COMPARATOR);
         String expectedMessage = String.format(ListCommand.MESSAGE_SUCCESS_SORTED, "room");
         expectedModel.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS, ROOM_COMPARATOR);
-        assertCommandSuccess(listCommand, model, expectedMessage, expectedModel);
-    }
-
-    @Test
-    public void execute_listSortedByPhone_success() {
-        ListCommand listCommand = new ListCommand("phone", PHONE_COMPARATOR);
-        String expectedMessage = String.format(ListCommand.MESSAGE_SUCCESS_SORTED, "phone");
-        expectedModel.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS, PHONE_COMPARATOR);
-        assertCommandSuccess(listCommand, model, expectedMessage, expectedModel);
-    }
-
-    @Test
-    public void execute_listSortedByEmail_success() {
-        ListCommand listCommand = new ListCommand("email", EMAIL_COMPARATOR);
-        String expectedMessage = String.format(ListCommand.MESSAGE_SUCCESS_SORTED, "email");
-        expectedModel.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS, EMAIL_COMPARATOR);
         assertCommandSuccess(listCommand, model, expectedMessage, expectedModel);
     }
 
@@ -129,7 +109,7 @@ public class ListCommandTest {
 
         // sorted vs unsorted -> different hashCode
         ListCommand listDefault = new ListCommand();
-        ListCommand listSorted = new ListCommand("phone", PHONE_COMPARATOR);
+        ListCommand listSorted = new ListCommand("name", NAME_COMPARATOR);
         assertFalse(listDefault.hashCode() == listSorted.hashCode());
     }
 }

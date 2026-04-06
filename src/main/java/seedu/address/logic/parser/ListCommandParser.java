@@ -15,7 +15,7 @@ import seedu.address.logic.parser.exceptions.ParseException;
 public class ListCommandParser implements Parser<ListCommand> {
 
     private static final String MESSAGE_INVALID_SORT_FIELD =
-            "Invalid sort field! Supported field prefixes: n/, r/, p/, e/";
+            "Invalid sort field! Supported field prefixes: n/, r/";
 
     private static final Pattern SORT_ARGUMENT_PATTERN =
             Pattern.compile("\\s*-sort\\s+(?<field>\\S+)\\s*", Pattern.CASE_INSENSITIVE);
@@ -49,11 +49,6 @@ public class ListCommandParser implements Parser<ListCommand> {
                     .compareToIgnoreCase(p2.getName().fullName));
         case "r/":
             return new ListCommand("room", (p1, p2) -> p1.getRoom().compareTo(p2.getRoom()));
-        case "p/":
-            return new ListCommand("phone", (p1, p2) -> p1.getPhone().value.compareTo(p2.getPhone().value));
-        case "e/":
-            return new ListCommand("email", (p1, p2) -> p1.getEmail().value
-                    .compareToIgnoreCase(p2.getEmail().value));
         default:
             throw new ParseException(MESSAGE_INVALID_SORT_FIELD);
         }

@@ -260,11 +260,11 @@ _{more aspects and alternatives to be added}_
 
 #### Implementation
 
-The sorting feature is integrated into the `list` command. It allows users to view all residents ordered by a chosen field (name, room, phone, or email).
+The sorting feature is integrated into the `list` command. It allows users to view all residents ordered by a chosen field (name or room).
 
 The implementation relies on JavaFX's `SortedList`, which is initialized in `ModelManager` to wrap around the `filteredPersons` list. This architectural choice ensures that whenever the filter changes (e.g., via `find`), the sort order can still be applied to the filtered subset.
 
-1.  `ListCommandParser` identifies the `-sort` option and maps the following field prefix (`n/`, `r/`, `p/`, `e/`) to a corresponding `Comparator<Person>`.
+1.  `ListCommandParser` identifies the `-sort` option and maps the following field prefix (`n/`, `r/`) to a corresponding `Comparator<Person>`.
 2.  `ListCommand` is created with the field name and its comparator.
 3.  Upon execution, `ListCommand` calls `Model#updateFilteredPersonList(Predicate, Comparator)`.
 4.  `ModelManager` sets the filter on its `FilteredList` and the comparator on its `SortedList`.
@@ -586,11 +586,8 @@ testers are expected to do more *exploratory* testing.
    1. Test case: `list -sort r/`<br>
       Expected: List is updated to show all residents sorted by room number (format: #BLOCK-ROOM[-LETTER]). Status message confirms sorting.
 
-   1. Test case: `list -sort p/`<br>
-      Expected: List is updated to show all residents sorted by their phone numbers.
-
    1. Test case: `list -sort x/`<br>
-      Expected: No sorting occurs. Error message "Invalid sort field! Supported field prefixes: n/, r/, p/, e/" is displayed.
+      Expected: No sorting occurs. Error message "Invalid sort field! Supported field prefixes: n/, r/" is displayed.
 
 ### Deleting a person
 
