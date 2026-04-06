@@ -5,7 +5,7 @@ import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Optional;
+import java.util.List;
 import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
@@ -138,15 +138,15 @@ public class ParserUtil {
         requireNonNull(usageMessage);
 
         // Get all instances of boolean flag
-        List<String> flagValue = argMultimap.getAllValues(prefix);
-        // No flag provided, value is `false`
-        if (allFlagValues.isEmpty())
+        List<String> flagValues = argMultimap.getAllValues(prefix);
+        if (flagValues.isEmpty()) {
+            // No flag provided, value is `false`
             return false;
         }
 
         // Check each instance of boolean flag
         // Must not have an associated value
-        String flagValue = allFlagValues.get(0);
+        String flagValue = flagValues.get(0);
         if (!flagValue.isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, usageMessage));
         }
