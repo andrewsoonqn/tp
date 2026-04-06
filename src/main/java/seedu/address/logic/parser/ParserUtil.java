@@ -129,6 +129,7 @@ public class ParserUtil {
 
     /**
      * Parses a flag prefix that must not have an associated value.
+     * If the flag is present multiple times, it is treated as a single flag.
      */
     public static boolean parseBooleanFlag(ArgumentMultimap argMultimap, Prefix prefix, String usageMessage)
             throws ParseException {
@@ -136,12 +137,17 @@ public class ParserUtil {
         requireNonNull(prefix);
         requireNonNull(usageMessage);
 
-        Optional<String> flagValue = argMultimap.getValue(prefix);
-        if (flagValue.isEmpty()) {
+        // Get all instances of boolean flag
+        List<String> flagValue = argMultimap.getAllValues(prefix);
+        // No flag provided, value is `false`
+        if (allFlagValues.isEmpty())
             return false;
         }
 
-        if (!flagValue.get().isEmpty()) {
+        // Check each instance of boolean flag
+        // Must not have an associated value
+        String flagValue = allFlagValues.get(0);
+        if (!flagValue.isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, usageMessage));
         }
 
