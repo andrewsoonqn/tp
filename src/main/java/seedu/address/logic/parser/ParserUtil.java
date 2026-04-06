@@ -144,11 +144,11 @@ public class ParserUtil {
             return false;
         }
 
-        // Check each instance of boolean flag
-        // Must not have an associated value
-        String flagValue = flagValues.get(0);
-        if (!flagValue.isEmpty()) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, usageMessage));
+        // Check each instance of boolean flag - must not have an associated value
+        for (String flagValue : flagValues) {
+            if (!flagValue.isEmpty()) {
+                throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, usageMessage));
+            }
         }
 
         return true;
