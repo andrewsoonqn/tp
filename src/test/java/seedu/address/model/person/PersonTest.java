@@ -62,6 +62,13 @@ public class PersonTest {
         editedBob = new PersonBuilder(BOB).withName(nameWithTrailingSpaces).withPhone("98888888")
                 .withEmail("other@example.com").withRoom("#11-111-B").build();
         assertFalse(BOB.isSamePerson(editedBob));
+
+        // same phone/email but one side is empty -> returns false
+        Person personWithEmptyContacts = new PersonBuilder(ALICE).withName("No Contact").withPhone("")
+                .withEmail("").withRoom("#10-100-A").build();
+        Person personWithFilledContacts = new PersonBuilder(ALICE).withName("Has Contact").withPhone("94351253")
+                .withEmail("alice@example.com").withRoom("#10-101-A").build();
+        assertFalse(personWithEmptyContacts.isSamePerson(personWithFilledContacts));
     }
 
     @Test
