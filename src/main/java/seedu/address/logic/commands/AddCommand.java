@@ -62,7 +62,8 @@ public class AddCommand extends Command {
     public static final String MESSAGE_NEWTAG_FLAG_TAKES_NO_VALUE =
             "The " + PREFIX_NEWTAG + " flag must not be followed by a value.";
     public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book";
-    public static final String MESSAGE_DUPLICATE_NAME = "Name already exists in the address book. E.g. try using Alex Tan (Year 2) instead of Alex Tan.";
+    public static final String MESSAGE_DUPLICATE_NAME =
+            "Name already exists in the address book. E.g. try using Alex Tan (Year 2) instead of Alex Tan.";
     public static final String MESSAGE_DUPLICATE_PHONE = "Phone number already exists in the address book.";
     public static final String MESSAGE_DUPLICATE_EMAIL = "Email already exists in the address book.";
     public static final String MESSAGE_DUPLICATE_ROOM = "Room number already exists in the address book.";
@@ -85,23 +86,6 @@ public class AddCommand extends Command {
         requireNonNull(person);
         toAdd = person;
         this.shouldCreateNewTags = shouldCreateNewTags;
-    }
-
-    @Override
-    public CommandResult execute(Model model) throws CommandException {
-        requireNonNull(model);
-        TagCommandUtil.validateKnownTags(model, toAdd.getTags(), shouldCreateNewTags, MESSAGE_USAGE_WITH_NEWTAG);
-
-        if (model.hasPerson(toAdd)) {
-            throw new CommandException(getDuplicateMessage(model, toAdd));
-        }
-
-        if (shouldCreateNewTags) {
-            // Only register new custom tags when explicitly requested.
-            model.addCustomTags(toAdd.getTags());
-        }
-        model.addPerson(toAdd);
-        return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(toAdd)));
     }
 
     private static String getDuplicateMessage(Model model, Person candidate) {
@@ -129,6 +113,23 @@ public class AddCommand extends Command {
             return MESSAGE_DUPLICATE_ROOM;
         }
         return MESSAGE_DUPLICATE_PERSON;
+    }
+
+    @Override
+    public CommandResult execute(Model model) throws CommandException {
+        requireNonNull(model);
+        TagCommandUtil.validateKnownTags(model, toAdd.getTags(), shouldCreateNewTags, MESSAGE_USAGE_WITH_NEWTAG);
+
+        if (model.hasPerson(toAdd)) {
+            throw new CommandException(getDuplicateMessage(model, toAdd));
+        }
+
+        if (shouldCreateNewTags) {
+            // Only register new custom tags when explicitly requested.
+            model.addCustomTags(toAdd.getTags());
+        }
+        model.addPerson(toAdd);
+        return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(toAdd)));
     }
 
     @Override
