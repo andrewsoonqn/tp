@@ -156,7 +156,7 @@ Examples:
   * Missing `n/` -> `Missing required parameter: n/NAME`
   * Missing `r/` -> `Missing required parameter: r/ROOM`
 * Duplicate fields are rejected with targeted messages:
-  * Name -> `Name already exists in the address book.`
+  * Name -> `Name already exists in the address book. E.g. try using Alex Tan (Year 2) instead of Alex Tan.`
   * Phone -> `Phone number already exists in the address book.`
   * Email -> `Email already exists in the address book.`
   * Room -> `Room number already exists in the address book.`
