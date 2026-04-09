@@ -85,6 +85,8 @@
 
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
 
+* For fields that should appear at most once (e.g. `n/`, `p/`, `e/`, `r/`, `c/`, and the `-newtag` flag), providing the same prefix more than once in a single command is rejected.
+
 * When the app reports **`Invalid command format!`**, the message often includes a **second line** showing the correct usage for that command — read both lines together.
 </box>
 
@@ -140,6 +142,8 @@ Format: `add n/NAME [p/PHONE] [e/EMAIL] r/ROOM [t/TAG]…​ [-newtag]`
 * **Spaces are not allowed in tags.** Use hyphens to separate words instead (e.g., `study-group` not `study group`).
 * To create a new custom tag while adding a resident, include `-newtag` in the same command.
 * If you include `-newtag` for a tag that already exists, RACE will still accept the command. No duplicate tag is created.
+* Duplicate checks apply to `name`, `room`, `phone`, and `email`.
+* `phone` and `email` are optional, but if provided, they must still be unique among residents.
 
 </box>
 
@@ -147,6 +151,22 @@ Examples:
 * `add n/John Doe p/98765432 e/e1234567@u.nus.edu r/#14-203-D`
 * `add n/Betsy Crowe t/vegetarian e/e4567890@u.nus.edu r/#10-10 p/1234567 t/allergies`
 * `add n/Alex Tan r/#12-101 p/91234567 t/study-group -newtag`
+
+<box type="warning" seamless>
+
+**Caution:**
+* Text before the first prefix (e.g. `add stray n/Alice r/#1-01`) triggers `Invalid command format!`.
+* Missing required fields:
+  * Missing `n/` -> `Missing required parameter: n/NAME`
+  * Missing `r/` -> `Missing required parameter: r/ROOM`
+* Duplicate fields are rejected with targeted messages:
+  * Name -> `Name already exists in the address book. E.g. try using Alex Tan (Year 2) instead of Alex Tan.`
+  * Phone -> `Phone number already exists in the address book.`
+  * Email -> `Email already exists in the address book.`
+  * Room -> `Room number already exists in the address book.`
+* `-newtag` must not be followed by a value; e.g. `-newtag oops` is rejected.
+
+</box>
 
 ---
 
@@ -176,7 +196,7 @@ Examples:
 
 ### Listing all residents : `list`
 
-Shows all residents in the address book. You can optionally sort the displayed list by name, room, phone, or email.
+Shows all residents in the address book. You can optionally sort the displayed list by name or room.
 
 Format:
 `list`
@@ -187,7 +207,7 @@ When sorting is NOT used:
 `Listed all residents`
 
 When sorting IS used:
-`Listed all residents sorted by FIELD` (where `FIELD` is `name`, `room`, `phone`, or `email`, depending on the prefix you used)
+`Listed all residents sorted by FIELD` (where `FIELD` is `name` or `room`, depending on the prefix you used)
 
 <box type="info" seamless>
 
@@ -260,8 +280,7 @@ Expected output (the full line includes the resident’s details after the name)
 * The `INDEX` refers to the unique numbered position shown in the current list (via `list` or `find`). The `INDEX` must be a positive integer (1, 2, 3, …).
 * A new comment will overwrite any existing comment.
 * To delete a comment, use `c/` with no text.
-* Leading and trailing spaces in comments are ignored.
-* If the comment only contains whitespace, it is treated as empty.
+* If the comment only contains whitespace, it is treated as empty and the comment is removed.
 
 </box>
 
@@ -290,9 +309,9 @@ Examples:
 
 </box>
 
-### Finding residents by name or room: `find`
+### Finding residents by name, room, or tags: `find`
 
-Finds residents by **keywords in the full name** (substring match), or by **exact room string**.
+Finds residents by **keywords** using substring matching across **name**, **room**, and **tags**.
 
 Format:
 * `find KEYWORD [MORE_KEYWORDS]`
@@ -305,15 +324,12 @@ Expected Output:
 
 **Note:**
 
-**Name search**
+**Matching behavior**
 * Case-insensitive (e.g., `hans` matches `Hans Bo`)
-* Each keyword is matched as a **substring** anywhere in the full name (e.g., `Ali` can match `Alice`, and `Han` can match `Hans`)
+* Each keyword is matched as a **substring** in name, room, and tags
+  (e.g., `Ali` can match `Alice`, `#14-2` can match `#14-203-D`, and `study` can match tag `study-group`)
 * Keyword order does not matter (e.g., `find Hans Bo` matches a resident named `Bo Hans`)
 * Multiple keywords use **OR** logic: a resident is listed if **any** keyword matches
-
-**Room search**
-* Room must follow `#FLOOR-UNIT[-LETTER]` (floor and unit are numeric; the letter suffix is optional), e.g. `#14-203-D`, `#10-101`
-* The room string must match **exactly** as stored (e.g., `#05-203-D` and `#5-203-D` are different strings)
 
 </box>
 
@@ -325,6 +341,8 @@ Examples:
   → Shows residents `Alex Yeoh`, `David Li`
 * `find #14-203-D`  
   → Shows residents in that room  
+* `find study`  
+  → Shows residents with matching tags (e.g., `study-group`)
 
 <box type="warning" seamless>
 
@@ -472,7 +490,7 @@ Examples:
 
 ### Saving the data
 
-AddressBook data are saved in the hard disk automatically after any command that changes the data. There is no need to save manually.
+AddressBook data are saved to disk automatically after every successful command. There is no need to save manually.
 
 ### Editing the data file
 
@@ -483,7 +501,7 @@ AddressBook data are saved automatically as a JSON file `[JAR file location]/dat
 **Caution:**
 If your changes to the data file makes its format invalid, AddressBook will discard all data and start with an empty data file at the next run.  Hence, it is recommended to take a backup of the file before editing it.<br>
 Furthermore, certain edits can cause the AddressBook to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
-If you edit tags manually, keep the `customTags` list aligned with the custom tags used by residents. If they do not match, RACE repairs this in memory when it loads and writes the corrected version back on the next successful save.
+If you edit tags manually, keep the `customTags` list reasonably aligned with the custom tags used by residents. On load, RACE ensures that all tags used by residents are present in `customTags`, but extra unused entries in `customTags` may still remain.
 </box>
 
 ### Archiving data files `[coming in v2.0]`
@@ -508,7 +526,9 @@ _Details coming soon ..._
 ### Rules and limitations
 
 **Q**: Can I add two residents with the same name?<br>
-**A**: No. The app treats residents with the same name as duplicates, even if their other details are different. Try adding unique qualifiers to the name, e.g., `Alex Tan (Block 14)` and `Alex Tan (Block 9)`.
+**A**: No. Name is part of duplicate checking, so adding another resident with the same name is rejected. If two residents have the same legal name, use a differentiator in the stored name, e.g., `Alex Tan (Block 14)` and `Alex Tan (Block 9)`.
+**Q**: What fields are checked for duplicates when adding a resident?<br>
+**A**: RACE rejects `add` if an existing resident already has the same `name`, `room`, `phone` (when provided), or `email` (when provided).
 **Q**: Can I delete more than one resident at once?<br>
 **A**: Yes. Use comma-separated indices, e.g. `delete 1,3,5` (see the [delete](#deleting-a-resident-delete) section).
 
