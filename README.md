@@ -40,12 +40,11 @@ The system allows RAs to:
 Each resident record can include:
 
 - Name
-- Unit number
-- Student ID
-- Contact number
-- Telegram handle
-- School email
-- Dietary requirements
+- Room
+- Phone number
+- Email
+- Tags (e.g., dietary preferences)
+- Comment
 
 RACE acts as an **information navigator**, not a communication platform.
 
