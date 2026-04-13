@@ -153,6 +153,7 @@ The `Storage` component,
 * can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
 * persists each person's comment in the JSON data file and loads missing `comment` fields as empty comments to preserve compatibility with older saved data.
 * persists the custom tag registry separately as `customTags`, while also rebuilding missing custom-tag entries from loaded persons so the in-memory model stays usable even if the file is stale.
+* surfaces address-book load outcomes to the UI so the result display can show whether saved data, sample data, or an empty address book was loaded on startup.
 * inherits from both `AddressBookStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
 * depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
 
@@ -523,8 +524,6 @@ testers are expected to do more *exploratory* testing.
    1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
       Expected: Similar to previous.
 
-1. _{ more test cases …​ }_
-
 ### Editing a person's comment
 
 1. Adding or clearing a comment while all persons are being shown
@@ -544,6 +543,20 @@ testers are expected to do more *exploratory* testing.
 
 1. Dealing with missing/corrupted data files
 
-   1. _{explain how to simulate a missing/corrupted file, and the expected behavior}_
+   1. Delete `data/addressbook.json` if it exists, then launch the app.<br>
+      Expected: Sample residents are shown. The result display shows that no saved data was found and sample residents were loaded.
 
-1. _{ more test cases …​ }_
+   1. Make some successful edits, e.g. add a resident. Then, close the app. Edit `data/addressbook.json` and introduce an invalid value such as a duplicate resident, then launch the app again.<br>
+      Expected: The app starts with an empty address book. The result display shows the load error message followed by a message that the app started with an empty address book.
+
+   1. Close the app. Fix the invalid value introduced in the previous step. Then, edit `data/addressbook.json` and break the JSON syntax (for example, remove a quote or insert random text), then launch the app again.<br>
+      Expected: The app starts with an empty address book. The result display shows the parser error message followed by a message that the app started with an empty address book. This message can be very long because it may include the raw parser output.
+
+--------------------------------------------------------------------------------------------------------------------
+
+## Appendix: Planned Enhancements
+
+Team size: 5
+
+1. **Startup load errors can be too verbose.** The current design shows the original storage/parser error in the result display on startup so that users are not left without feedback. For malformed JSON, this can produce a very long message because the raw parser output may include file excerpts. A future improvement is to keep the useful location details while shortening the displayed message and moving the full raw error to an expandable UI.
+
