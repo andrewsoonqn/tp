@@ -593,8 +593,6 @@ testers are expected to do more *exploratory* testing.
    1. Test case: Execute a successful command such as `add n/Recovered Resident r/#11-111`.<br>
       Expected: The app saves normally again, and `data/addressbook.json` is replaced with a valid file containing the new resident data.
 
-1. _{ more test cases …​ }_
-
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Appendix: Planned Enhancements**
