@@ -439,7 +439,7 @@ Examples:
 
 **Tips:**
 * Always confirm the correct index using `list` or `find`.
-* Back up `data/addressbook.json` before bulk deletions.
+* Back up `data/addressbook.json` before bulk deletions. See [FAQ: Saving and data](#saving-and-data) for where the file is located and how to copy it.
 * After `find`, indices refer to filtered results (not the full list).
 
 </box>
@@ -478,7 +478,7 @@ Examples:
 
 **Tips:**
 * Use `clear` at the start of a new semester to reset the system.
-* Back up `data/addressbook.json` before using this command.
+* Back up `data/addressbook.json` before using this command. See [FAQ: Saving and data](#saving-and-data) for where the file is located and how to copy it.
 * Avoid accidental execution.
 
 </box>
