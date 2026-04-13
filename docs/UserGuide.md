@@ -147,6 +147,7 @@ Format: `add n/NAME [p/PHONE] [e/EMAIL] r/ROOM [t/TAG]…​ [-newtag]`
 * **Spaces are not allowed in tags.** Use hyphens to separate words instead (e.g., `study-group` not `study group`).
 * To create a new custom tag while adding a resident, include `-newtag` in the same command.
 * If you include `-newtag` for a tag that already exists, RACE will still accept the command. No duplicate tag is created.
+* If you provide `-newtag` without any `t/` tag in the same command, the command may still succeed, but no tag is created. See [FAQ: Rules and limitations](#rules-and-limitations) for details.
 * Duplicate checks apply to `name`, `room`, `phone`, and `email`.
 * `phone` and `email` are optional, but if provided, they must still be unique among residents.
 
@@ -193,7 +194,7 @@ Tags help you label residents with quick categories or notes.
 * Custom tags must already exist before you can reuse them.
 * **Spaces are not allowed in tags.** Use hyphens to separate words (e.g., `project-team` not `project team`).
 * If you want to introduce a brand-new custom tag, use `-newtag` together with `add` or `edit`.
-* If you use `-newtag` for an already existing tag, the command still succeeds normally.
+* If you use `-newtag` for an already existing tag, the command still succeeds normally. See [FAQ: Rules and limitations](#rules-and-limitations) for `-newtag` behavior details.
 
 </box>
 
@@ -578,6 +579,9 @@ _Details coming soon ..._
 
 **Q**: What happens if I use `-newtag` for a tag that already exists?<br>
 **A**: Nothing extra happens. The command still works normally, and RACE simply reuses the existing tag.
+
+**Q**: What if I use `-newtag` without any `t/` tag?<br>
+**A**: The command may still succeed if the rest of the input is valid, but no tag is created. Use `-newtag` together with at least one `t/TAG` value when creating new tags.
 
 ### Saving and data
 
