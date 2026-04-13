@@ -12,11 +12,13 @@ import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import seedu.address.commons.exceptions.DataLoadingException;
+import seedu.address.commons.util.FileUtil;
 import seedu.address.model.AddressBook;
 import seedu.address.model.ReadOnlyAddressBook;
 
@@ -44,6 +46,16 @@ public class JsonAddressBookStorageTest {
     @Test
     public void read_missingFile_emptyResult() throws Exception {
         assertFalse(readAddressBook("NonExistentFile.json").isPresent());
+    }
+
+    @Test
+    public void read_emptyFile_emptyResult() throws Exception {
+        Path filePath = testFolder.resolve("emptyAddressBook.json");
+        FileUtil.createIfMissing(filePath);
+
+        Optional<ReadOnlyAddressBook> result = new JsonAddressBookStorage(filePath).readAddressBook(filePath);
+
+        assertFalse(result.isPresent());
     }
 
     @Test

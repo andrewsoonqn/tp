@@ -45,6 +45,11 @@ public class JsonAddressBookStorage implements AddressBookStorage {
     public Optional<ReadOnlyAddressBook> readAddressBook(Path filePath) throws DataLoadingException {
         requireNonNull(filePath);
 
+        // If file exists, but is blank, treat as not present
+        if (isBlankAddressBookFile(filePath)) {
+            return Optional.empty();
+        }
+
         Optional<JsonSerializableAddressBook> jsonAddressBook = JsonUtil.readJsonFile(
                 filePath, JsonSerializableAddressBook.class);
         if (!jsonAddressBook.isPresent()) {
@@ -56,6 +61,14 @@ public class JsonAddressBookStorage implements AddressBookStorage {
         } catch (IllegalValueException ive) {
             logger.info("Illegal values found in " + filePath + ": " + ive.getMessage());
             throw new DataLoadingException(ive);
+        }
+    }
+
+    private boolean isBlankAddressBookFile(Path filePath) throws DataLoadingException {
+        try {
+            return FileUtil.isFileExists(filePath) && FileUtil.readFromFile(filePath).isBlank();
+        } catch (IOException ioe) {
+            throw new DataLoadingException(ioe);
         }
     }
 

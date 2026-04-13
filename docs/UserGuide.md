@@ -151,6 +151,7 @@ Format: `add n/NAME [p/PHONE] [e/EMAIL] r/ROOM [t/TAG]…​ [-newtag]`
 * Duplicate checks apply to `name`, `room`, `phone`, and `email`.
 * Room uniqueness is intentional for this app's model (one resident per room in this Residential College (RC) context).
 * `phone` and `email` are optional, but if provided, they must still be unique among residents.
+* If you previously ran `list -sort ...`, adding a resident preserves that active sort order in the displayed list.
 
 </box>
 
@@ -595,7 +596,10 @@ _Details coming soon ..._
 **A**: Close the app first. Then find `data/addressbook.json` in the same folder as the `.jar` file you use to open the app. Copy that file into the `data` folder within the same folder as the `.jar` file in the new setup. If the new setup already has its own `addressbook.json`, replace it with your copied file. When you open the app again, your resident list should appear there.
 
 **Q**: What happens the first time I open the app?<br>
-**A**: If no data file exists yet, the app starts with sample residents. These are written to `data/addressbook.json` when you make your first successful change. If the file exists but cannot be loaded properly, the app starts with an empty list, and your next successful change saves a fresh data file.
+**A**: If no data file exists yet, the app starts with sample residents. These are written to `data/addressbook.json` when you make your first successful change. If the file exists but cannot be loaded properly, the app starts with an empty list, your next successful change saves a fresh data file, and the message box shows the startup loading result.
+
+**Q**: What will I see if `addressbook.json` cannot be loaded on startup?<br>
+**A**: RACE shows the loading result in the message box. For example, if duplicate residents are found, the message box shows the load error and that the app started with an empty address book instead. If the file exists but is empty, RACE treats it like a missing data file and loads sample residents instead. For malformed JSON syntax, the original parser error may be shown and can be quite long.
 
 ### Help
 
