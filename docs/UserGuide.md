@@ -216,11 +216,8 @@ Shows all residents in the address book. You can optionally sort the displayed l
 Format: `list` or `list -sort PREFIX`
 
 Expected Output:
-When sorting is NOT used:
-`Listed all residents`
-
-When sorting IS used:
-`Listed all residents sorted by FIELD` (where `FIELD` is `name` or `room`, depending on the prefix you used)
+* When sorting is NOT used: `Listed all residents`
+* When sorting IS used: `Listed all residents sorted by FIELD` (where `FIELD` is `name` or `room`, depending on the prefix you used)
 
 <box type="info" seamless>
 
