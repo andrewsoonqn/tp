@@ -7,9 +7,11 @@
 
 **RACE (Residential Assistant’s Contact Entries)** is a desktop application for managing resident information, optimized for use via a Command Line Interface (CLI) while still providing the benefits of a Graphical User Interface (GUI). It allows Residential Assistants to quickly store, update, and retrieve resident details in a secure, centralised system, replacing fragmented and inefficient workflows. Fast CLI commands enable efficient data entry and management, especially during high-intensity periods like onboarding.
 
+RACE is the product name used throughout this guide. Where the term "address book" appears, it is used as a generic description of the app's function. The executable filename remains `addressbook.jar`.
+
 **Target Users:** Residential Assistants (RAs)  
 
-**Assumptions:** Users have basic computer literacy and are comfortable with typing commands, navigating lists, and interpreting simple system feedback. They can quickly pick up terminal-style interactions and prefer efficient, keyboard-driven workflows for repetitive tasks.
+**Assumptions:** Users have basic computer literacy and are comfortable with typing commands, navigating lists, and interpreting simple system feedback. They can quickly pick up terminal-style interactions and prefer efficient, keyboard-driven workflows for repetitive tasks. This guide assumes a Residential College (RC) context where one resident is tracked per room; duplicate room numbers are therefore treated as invalid.
 
 <!-- * Table of Contents -->
 <!-- Will only show when printed or exported as PDF, as sidebar is provided when viewing on the web. -->
@@ -24,7 +26,7 @@
 
 1. Download the latest `.jar` file from [here](https://github.com/AY2526S2-CS2103T-T10-2/tp/releases).
 
-1. Copy the file to the folder you want to use as the _home folder_ for your AddressBook.
+1. Copy the file to the folder you want to use as the _home folder_ for your address book data in RACE.
 
 1. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar addressbook.jar` command to run the application.<br>
    A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
@@ -85,7 +87,10 @@
 
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
 
-* For fields that should appear at most once (e.g. `n/`, `p/`, `e/`, `r/`, `c/`, and the `-newtag` flag), providing the same prefix more than once in a single command is rejected.
+* For fields that should appear at most once (e.g. `n/`, `p/`, `e/`, `r/`, `c/`), providing the same prefix more than once in a single command is rejected.
+
+* Prefix-like tokens are reserved by the parser and should not be used as plain text inside field values.<br>
+  e.g. avoid including `p/`, `c/`, `n/`, `e/`, `r/`, or `t/` inside free-text input unless you intend to start a new field.
 
 * When the app reports **`Invalid command format!`**, the message often includes a **second line** showing the correct usage for that command — read both lines together.
 </box>
@@ -142,7 +147,9 @@ Format: `add n/NAME [p/PHONE] [e/EMAIL] r/ROOM [t/TAG]…​ [-newtag]`
 * **Spaces are not allowed in tags.** Use hyphens to separate words instead (e.g., `study-group` not `study group`).
 * To create a new custom tag while adding a resident, include `-newtag` in the same command.
 * If you include `-newtag` for a tag that already exists, RACE will still accept the command. No duplicate tag is created.
+* If you provide `-newtag` without any `t/` tag in the same command, the command may still succeed, but no tag is created. See [FAQ: Rules and limitations](#rules-and-limitations) for details.
 * Duplicate checks apply to `name`, `room`, `phone`, and `email`.
+* Room uniqueness is intentional for this app's model (one resident per room in this Residential College (RC) context).
 * `phone` and `email` are optional, but if provided, they must still be unique among residents.
 * If you previously ran `list -sort ...`, adding a resident preserves that active sort order in the displayed list.
 
@@ -152,6 +159,9 @@ Examples:
 * `add n/John Doe p/98765432 e/e1234567@u.nus.edu r/#14-203-D`
 * `add n/Betsy Crowe t/vegetarian e/e4567890@u.nus.edu r/#10-10 p/1234567 t/allergies`
 * `add n/Alex Tan Jia-en r/#12-101 p/91234567 t/study-group -newtag`
+
+![Add command success](images/ug-add-success.png)
+*`add n/Alex Tan Jia-en r/#12-101 p/91234567 t/study-group -newtag` shows a successful add and the new resident entry in the list.*
 
 <box type="warning" seamless>
 
@@ -169,6 +179,9 @@ Examples:
 
 </box>
 
+![Add command invalid format](images/ug-add-error-format.png)
+*`add stray n/Alice r/#1-01` shows `Invalid command format!` feedback.*
+
 ---
 
 ### Working with tags
@@ -183,7 +196,7 @@ Tags help you label residents with quick categories or notes.
 * Custom tags must already exist before you can reuse them.
 * **Spaces are not allowed in tags.** Use hyphens to separate words (e.g., `project-team` not `project team`).
 * If you want to introduce a brand-new custom tag, use `-newtag` together with `add` or `edit`.
-* If you use `-newtag` for an already existing tag, the command still succeeds normally.
+* If you use `-newtag` for an already existing tag, the command still succeeds normally. See [FAQ: Rules and limitations](#rules-and-limitations) for `-newtag` behavior details.
 
 </box>
 
@@ -193,22 +206,20 @@ Examples:
 * `edit 2 t/study-group` reuses an existing custom tag.
 * `edit 2 t/Study-Group -newtag` creates a different tag from `study-group` because tags are case-sensitive.
 
+![Tag usage in resident card](images/ug-tags-usage.png)
+*`add n/Sam Lee r/#08-110 t/study-group -newtag` demonstrates custom tag usage in the resident list.*
+
 ---
 
 ### Listing all residents : `list`
 
 Shows all residents in the address book. You can optionally sort the displayed list by name or room.
 
-Format:
-`list`
-`list -sort PREFIX`
+Format: `list` or `list -sort PREFIX`
 
 Expected Output:
-When sorting is NOT used:
-`Listed all residents`
-
-When sorting IS used:
-`Listed all residents sorted by FIELD` (where `FIELD` is `name` or `room`, depending on the prefix you used)
+* When sorting is NOT used: `Listed all residents`
+* When sorting IS used: `Listed all residents sorted by FIELD` (where `FIELD` is `name` or `room`, depending on the prefix you used)
 
 <box type="info" seamless>
 
@@ -216,6 +227,7 @@ When sorting IS used:
 * Supported sort prefixes:
   * `n/` (name)
   * `r/` (room)
+* Only one sort field is supported per command. Do not combine prefixes in a single sort (e.g., `list -sort n/ r/` is invalid).
 * If you omit `-sort`, residents are shown in the order stored in the app (typically the order they were added).
 
 </box>
@@ -225,6 +237,7 @@ When sorting IS used:
 **Caution:**
 * Invalid command format → `Invalid command format!`
 * Invalid sort prefix (e.g., `list -sort x/`) → `Invalid sort field! Supported field prefixes: n/, r/`
+* Multiple sort fields are not supported (e.g., `list -sort n/ r/`) → `Invalid command format!`
 
 </box>
 
@@ -241,6 +254,9 @@ Input → Expected Output
 * `list` → `Listed all residents`
 * `list -sort r/` → `Listed all residents sorted by room`
 * `list -sort n/` → `Listed all residents sorted by name`
+
+![List sorted by room](images/ug-list-sort-room.png)
+*`list -sort r/` shows the resident list sorted by room with the corresponding result message.*
 
 
 ### Editing a resident : `edit`
@@ -261,6 +277,12 @@ Examples:
 *  `edit 1 p/91234567 e/e1222222@u.nus.edu` Edits the phone number and email address of the 1st resident to be `91234567` and `e1222222@u.nus.edu` respectively.
 *  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd resident to be `Betsy Crower` and clears all existing tags.
 *  `edit 3 t/project-team -newtag` Replaces the 3rd resident's tags with `project-team` and creates that custom tag if needed.
+
+![Before edit command](images/ug-edit-success-before.png)
+*Before `edit 1 p/91234567 e/e1222222@u.nus.edu`: resident details prior to edit.*
+
+![After edit command](images/ug-edit-success-after.png)
+*After `edit 1 p/91234567 e/e1222222@u.nus.edu`: success message and updated resident details.*
 
 ### Commenting on a resident: `comment`
 
@@ -291,6 +313,12 @@ Examples:
   → Replaces existing comment  
 * `comment 3 c/`  
   → Deletes the existing comment  
+
+![Comment added](images/ug-comment-add.png)
+*`comment 1 c/Prefers WhatsApp messages before visits` adds a comment to the resident card.*
+
+![Comment removed](images/ug-comment-remove.png)
+*`comment 1 c/` removes the comment from the resident card.*
 
 <box type="warning" seamless>
 
@@ -326,7 +354,8 @@ Expected Output:
   * e.g., `Han` matches `Hans`
   * e.g., `#14-2` matches `#14-203-D`
   * e.g., `allerg` matches tag `allergies`
-* `find` checks resident **name**, **room**, and **tags**.
+* `find` checks resident **name**, **room**, and **tags** only.
+* `find` does **not** search the `comment` field.
 * If multiple keywords are provided, OR logic is used (a resident is returned if any keyword matches).
 
 </box>
@@ -341,6 +370,9 @@ Examples:
   → Shows residents with tags containing `allerg` (e.g., `allergies`)
 * `find alex #14-2 halal`  
   → Shows residents matching any of these keywords in name, room, or tags  
+
+![Find command filtered results](images/ug-find-results.png)
+*`find alex #14-2 study-group` shows filtered results that match any provided keyword.*
 
 <box type="warning" seamless>
 
@@ -395,14 +427,21 @@ Examples:
 **Caution:**
 * Invalid index → `The person index provided is invalid`
 * Missing index → `Invalid command format!`
+* Trailing/leading/consecutive commas are invalid (e.g. `delete 1,`, `delete ,1`, `delete 1,,2`) → `Invalid command format!`
 
 </box>
+
+![Before multi-delete](images/ug-delete-multiple-success-before.png)
+*Before `delete 1,3`: resident list state prior to deletion.*
+
+![After multi-delete](images/ug-delete-multiple-success-after.png)
+*After `delete 1,3`: `Deleted Persons:` confirmation and updated resident list.*
 
 <box type="tip" seamless>
 
 **Tips:**
 * Always confirm the correct index using `list` or `find`.
-* Back up `data/addressbook.json` before bulk deletions.
+* Back up `data/addressbook.json` before bulk deletions. See [FAQ: Saving and data](#saving-and-data) for where the file is located and how to copy it.
 * After `find`, indices refer to filtered results (not the full list).
 
 </box>
@@ -441,7 +480,7 @@ Examples:
 
 **Tips:**
 * Use `clear` at the start of a new semester to reset the system.
-* Back up `data/addressbook.json` before using this command.
+* Back up `data/addressbook.json` before using this command. See [FAQ: Saving and data](#saving-and-data) for where the file is located and how to copy it.
 * Avoid accidental execution.
 
 </box>
@@ -488,18 +527,17 @@ Examples:
 
 ### Saving the data
 
-AddressBook data are saved to disk automatically after every successful command. There is no need to save manually.
+RACE data are saved to disk automatically after every successful command. There is no need to save manually.
 
 ### Editing the data file
 
-AddressBook data are saved automatically as a JSON file `[JAR file location]/data/addressbook.json`. Advanced users are welcome to update data directly by editing that data file.
+RACE data are saved automatically as a JSON file `[JAR file location]/data/addressbook.json`. Advanced users are welcome to update data directly by editing that data file.
 
 <box type="warning" seamless>
 
 **Caution:**
-If your changes to the data file makes its format invalid, AddressBook will discard all data and start with an empty data file at the next run.  Hence, it is recommended to take a backup of the file before editing it.<br>
-Furthermore, certain edits can cause the AddressBook to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
-On startup, RACE shows a status message in the message box to indicate whether saved data was loaded successfully, sample data was loaded, or saved data could not be loaded. If loading fails, the message may include the original storage/parser error text and can be long, especially when the JSON file is malformed.
+If your changes to the data file makes its format invalid, RACE will discard all data and start with an empty data file at the next run.  Hence, it is recommended to take a backup of the file before editing it.<br>
+Furthermore, certain edits can cause RACE to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
 If you edit tags manually, keep the `customTags` list reasonably aligned with the custom tags used by residents. On load, RACE ensures that all tags used by residents are present in `customTags`, but extra unused entries in `customTags` may still remain.
 </box>
 
@@ -542,6 +580,9 @@ _Details coming soon ..._
 
 **Q**: What happens if I use `-newtag` for a tag that already exists?<br>
 **A**: Nothing extra happens. The command still works normally, and RACE simply reuses the existing tag.
+
+**Q**: What if I use `-newtag` without any `t/` tag?<br>
+**A**: The command may still succeed if the rest of the input is valid, but no tag is created. Use `-newtag` together with at least one `t/TAG` value when creating new tags.
 
 ### Saving and data
 
