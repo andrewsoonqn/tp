@@ -11,7 +11,8 @@ RACE is the product name used throughout this guide. Where the term "address boo
 
 **Target Users:** Residential Assistants (RAs)  
 
-**Assumptions:** Users have basic computer literacy and are comfortable with typing commands, navigating lists, and interpreting simple system feedback. They can quickly pick up terminal-style interactions and prefer efficient, keyboard-driven workflows for repetitive tasks.
+**Assumptions:** Users have basic computer literacy and are comfortable with typing commands, navigating lists, and interpreting simple system feedback. They can quickly pick up terminal-style interactions and prefer efficient, keyboard-driven workflows for repetitive tasks.  
+This guide assumes an RC context where one resident is tracked per room; duplicate room numbers are therefore treated as invalid.
 
 <!-- * Table of Contents -->
 <!-- Will only show when printed or exported as PDF, as sidebar is provided when viewing on the web. -->
@@ -149,6 +150,7 @@ Format: `add n/NAME [p/PHONE] [e/EMAIL] r/ROOM [t/TAG]…​ [-newtag]`
 * If you include `-newtag` for a tag that already exists, RACE will still accept the command. No duplicate tag is created.
 * If you provide `-newtag` without any `t/` tag in the same command, the command may still succeed, but no tag is created. See [FAQ: Rules and limitations](#rules-and-limitations) for details.
 * Duplicate checks apply to `name`, `room`, `phone`, and `email`.
+* Room uniqueness is intentional for this app's model (one resident per room in this RC context).
 * `phone` and `email` are optional, but if provided, they must still be unique among residents.
 
 </box>
