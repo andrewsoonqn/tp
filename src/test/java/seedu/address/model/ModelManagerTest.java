@@ -15,8 +15,8 @@ import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.GuiSettings;
-import seedu.address.model.person.Person;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
+import seedu.address.model.person.Person;
 import seedu.address.testutil.AddressBookBuilder;
 import seedu.address.testutil.PersonBuilder;
 
@@ -94,8 +94,8 @@ public class ModelManagerTest {
     public void addPerson_whenSorted_preservesSortOrder() {
         AddressBook addressBook = new AddressBookBuilder().withPerson(BENSON).withPerson(ALICE).build();
         modelManager = new ModelManager(addressBook, new UserPrefs());
-        modelManager.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS,
-                (p1, p2) -> p1.getName().fullName.compareToIgnoreCase(p2.getName().fullName));
+        modelManager.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS, (p1, p2)
+                -> p1.getName().fullName.compareToIgnoreCase(p2.getName().fullName));
 
         Person aaron = new PersonBuilder()
                 .withName("Aaron Aardvark")
