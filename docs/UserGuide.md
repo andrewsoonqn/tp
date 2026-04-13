@@ -87,6 +87,9 @@
 
 * For fields that should appear at most once (e.g. `n/`, `p/`, `e/`, `r/`, `c/`, and the `-newtag` flag), providing the same prefix more than once in a single command is rejected.
 
+* Prefix-like tokens are reserved by the parser and should not be used as plain text inside field values.<br>
+  e.g. avoid including `p/`, `c/`, `n/`, `e/`, `r/`, or `t/` inside free-text input unless you intend to start a new field.
+
 * When the app reports **`Invalid command format!`**, the message often includes a **second line** showing the correct usage for that command — read both lines together.
 </box>
 
