@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -21,6 +22,7 @@ import seedu.address.model.ModelManager;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.UserPrefs;
+import seedu.address.model.tag.Tag;
 import seedu.address.model.util.SampleDataUtil;
 import seedu.address.storage.AddressBookStorage;
 import seedu.address.storage.JsonAddressBookStorage;
@@ -45,6 +47,7 @@ public class MainApp extends Application {
     protected Storage storage;
     protected Model model;
     protected Config config;
+    private String startupMessage;
 
     @Override
     public void init() throws Exception {
@@ -64,7 +67,7 @@ public class MainApp extends Application {
 
         logic = new LogicManager(model, storage);
 
-        ui = new UiManager(logic);
+        ui = new UiManager(logic, startupMessage);
     }
 
     /**
@@ -82,15 +85,44 @@ public class MainApp extends Application {
             if (!addressBookOptional.isPresent()) {
                 logger.info("Creating a new data file " + storage.getAddressBookFilePath()
                         + " populated with a sample AddressBook.");
+                startupMessage = getLoadedSampleDataMessage();
+            } else {
+                startupMessage = getLoadedSavedDataMessage(storage.getAddressBookFilePath(), addressBookOptional.get());
             }
             initialData = addressBookOptional.orElseGet(SampleDataUtil::getSampleAddressBook);
         } catch (DataLoadingException e) {
             logger.warning("Data file at " + storage.getAddressBookFilePath() + " could not be loaded."
                     + " Will be starting with an empty AddressBook.");
+            startupMessage = getStartingEmptyMessage(storage.getAddressBookFilePath(), e);
             initialData = new AddressBook();
         }
 
         return new ModelManager(initialData, userPrefs);
+    }
+
+    static String getLoadedSampleDataMessage() {
+        return "No saved data found. Loaded sample residents.";
+    }
+
+    static String getLoadedSavedDataMessage(Path filePath, ReadOnlyAddressBook addressBook) {
+        int personCount = addressBook.getPersonList().size();
+        int customTagCount = addressBook.getCustomTagList().size();
+        String tagList = addressBook.getCustomTagList().stream()
+                .map(Tag::getTagName)
+                .sorted(String::compareToIgnoreCase)
+                .collect(Collectors.joining(", "));
+        return "Loaded saved data from " + filePath + ".\n"
+                + "Persons: " + personCount + "\n"
+                + "Custom tags (" + customTagCount + "): "
+                + (tagList.isEmpty() ? "none" : tagList) + ".";
+    }
+
+    static String getStartingEmptyMessage(Path filePath, DataLoadingException exception) {
+        Throwable cause = exception.getCause();
+        String reason = cause == null || cause.getMessage() == null
+                ? "Could not load saved data."
+                : cause.getMessage();
+        return reason + " Starting with an empty address book from " + filePath + ".";
     }
 
     private void initLogging(Config config) {
