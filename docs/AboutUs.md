@@ -17,43 +17,38 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 [[homepage](https://andrewsoon.com)]
 [[github](https://github.com/andrewsoonqn)]
-[[portfolio](team/andrewsoon.md)]
+
+- Role: Developer
 
 ### Sayyid Mehdi
+
 <img src="images/lamemario.png" width="200px">
 
 [[homepage](https://www.linkedin.com/in/sayyid-mehdi-bin-safiyullah-a604171b4)]
 [[github](https://github.com/lamemario)]
-[[portfolio](team/sayyidmehdi.md)]
 
-* Role: Project Developer
+- Role: Developer
 
 ### Aishwarya Goyal
 
 <img src="images/aishgogoyal.png" width="200px">
 
 [[github](https://github.com/aishgogoyal)]
-[[portfolio](team/aishgogoyal.md)]
 
-* Role: Team Lead
-* Responsibilities: UI
+- Role: Team Lead
 
 ### Hazel Low
 
 <img src="images/hqzell.png" width="200px">
 
 [[github](https://github.com/hqzell)]
-[[portfolio](team/hqzell.md)]
 
-* Role: Developer
-* Responsibilities: Dev Ops + Threading
+- Role: Developer
 
 ### Atharva
 
 <img src="images/athrv2.png" width="200px">
 
 [[github](https://github.com/athrv2)]
-[[portfolio](team/atharva.md)]
 
-* Role: Developer
-* Responsibilities: UI
+- Role: Developer

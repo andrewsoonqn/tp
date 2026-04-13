@@ -5,25 +5,27 @@
 ---
 
 # RACE Developer Guide
+
 This guide documents **RACE** (Residential Assistant’s Contact Entries). This repository extends the AB3 architecture with additional domain concepts such as room-based resident records, tag registries, comments, and list sorting behaviours that are not present in stock AB3.
 When reading older AB3-oriented diagrams or descriptions, interpret them as the high-level structure of the app; refer to the current `Model`, `Storage`, and `Logic` sections for RACE-specific details.
 Contributors should prefer updating diagrams and explanations alongside feature changes to avoid documentation drift.
+
 <!-- * Table of Contents -->
 <page-nav-print />
 
---------------------------------------------------------------------------------------------------------------------
+---
 
 ## **Acknowledgements**
 
-* The `comment` feature implementation is adapted from the se-edu tutorial [Adding optional fields to AB3](https://se-education.org/).
+- The `comment` feature implementation is adapted from the se-edu tutorial [Adding optional fields to AB3](https://se-education.org/).
 
---------------------------------------------------------------------------------------------------------------------
+---
 
 ## **Setting up, getting started**
 
 Refer to the guide [_Setting up and getting started_](SettingUp.md).
 
---------------------------------------------------------------------------------------------------------------------
+---
 
 ## **Design**
 
@@ -31,35 +33,36 @@ Refer to the guide [_Setting up and getting started_](SettingUp.md).
 
 <puml src="diagrams/ArchitectureDiagram.puml" width="280" />
 
-The ***Architecture Diagram*** given above explains the high-level design of the App.
+The **_Architecture Diagram_** given above explains the high-level design of the App.
 
 Given below is a quick overview of main components and how they interact with each other.
 
 **Main components of the architecture**
 
 **`Main`** (consisting of classes [`Main`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
-* At app launch, it initializes the other components in the correct sequence, and connects them up with each other.
-* At shut down, it shuts down the other components and invokes cleanup methods where necessary.
+
+- At app launch, it initializes the other components in the correct sequence, and connects them up with each other.
+- At shut down, it shuts down the other components and invokes cleanup methods where necessary.
 
 The bulk of the app's work is done by the following four components:
 
-* [**`UI`**](#ui-component): The UI of the App.
-* [**`Logic`**](#logic-component): The command executor.
-* [**`Model`**](#model-component): Holds the data of the App in memory.
-* [**`Storage`**](#storage-component): Reads data from, and writes data to, the hard disk.
+- [**`UI`**](#ui-component): The UI of the App.
+- [**`Logic`**](#logic-component): The command executor.
+- [**`Model`**](#model-component): Holds the data of the App in memory.
+- [**`Storage`**](#storage-component): Reads data from, and writes data to, the hard disk.
 
 [**`Commons`**](#common-classes) represents a collection of classes used by multiple other components.
 
 **How the architecture components interact with each other**
 
-The *Sequence Diagram* below shows how the components interact with each other for the scenario where the user issues the command `delete 1`.
+The _Sequence Diagram_ below shows how the components interact with each other for the scenario where the user issues the command `delete 1`.
 
 <puml src="diagrams/ArchitectureSequenceDiagram.puml" width="574" />
 
 Each of the four main components (also shown in the diagram above),
 
-* defines its *API* in an `interface` with the same name as the Component.
-* implements its functionality using a concrete `{Component Name}Manager` class (which follows the corresponding API `interface` mentioned in the previous point.
+- defines its _API_ in an `interface` with the same name as the Component.
+- implements its functionality using a concrete `{Component Name}Manager` class (which follows the corresponding API `interface` mentioned in the previous point.
 
 For example, the `Logic` component defines its API in the `Logic.java` interface and implements its functionality using the `LogicManager.java` class which follows the `Logic` interface. Other components interact with a given component through its interface rather than the concrete class (reason: to prevent outside component's being coupled to the implementation of a component), as illustrated in the (partial) class diagram below.
 
@@ -79,11 +82,11 @@ The `UI` component uses the JavaFx UI framework. The layout of these UI parts ar
 
 The `UI` component,
 
-* executes user commands using the `Logic` component.
-* listens for changes to `Model` data so that the UI can be updated with the modified data.
-* keeps a reference to the `Logic` component, because the `UI` relies on the `Logic` to execute commands.
-* depends on some classes in the `Model` component, as it displays `Person` object residing in the `Model`.
-* renders a resident's comment in `PersonCard` only when the comment is non-empty, so empty comments do not take up space in the list view.
+- executes user commands using the `Logic` component.
+- listens for changes to `Model` data so that the UI can be updated with the modified data.
+- keeps a reference to the `Logic` component, because the `UI` relies on the `Logic` to execute commands.
+- depends on some classes in the `Model` component, as it displays `Person` object residing in the `Model`.
+- renders a resident's comment in `PersonCard` only when the comment is non-empty, so empty comments do not take up space in the list view.
 
 ### Logic component
 
@@ -116,23 +119,24 @@ Here are the other classes in `Logic` (omitted from the class diagram above) tha
 <puml src="diagrams/ParserClasses.puml" width="600"/>
 
 How the parsing works:
-* When called upon to parse a user command, the `AddressBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name e.g., `AddCommandParser`) which uses the other classes shown above to parse the user command and create a `XYZCommand` object (e.g., `AddCommand`) which the `AddressBookParser` returns back as a `Command` object.
-* All `XYZCommandParser` classes (e.g., `AddCommandParser`, `DeleteCommandParser`, ...) inherit from the `Parser` interface so that they can be treated similarly where possible e.g, during testing.
+
+- When called upon to parse a user command, the `AddressBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name e.g., `AddCommandParser`) which uses the other classes shown above to parse the user command and create a `XYZCommand` object (e.g., `AddCommand`) which the `AddressBookParser` returns back as a `Command` object.
+- All `XYZCommandParser` classes (e.g., `AddCommandParser`, `DeleteCommandParser`, ...) inherit from the `Parser` interface so that they can be treated similarly where possible e.g, during testing.
 
 ### Model component
+
 **API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
 
 <puml src="diagrams/ModelClassDiagram.puml" width="450" />
 
-
 The `Model` component,
 
-* stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object). Each `Person` stores immutable values for `Name`, `Phone`, `Email`, `Room`, `Comment`, and tags.
-* stores a `CustomTagRegistry` inside `AddressBook` to track known custom tags separately from each `Person`, while still treating built-in tags as always known.
-* treats tag names as exact, case-sensitive values. There is no automatic tag normalization; kebab-case is a usage convention rather than a storage rule.
-* stores the currently 'selected' `Person` objects (e.g., results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
-* stores a `UserPrefs` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPrefs` object.
-* does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
+- stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object). Each `Person` stores immutable values for `Name`, `Phone`, `Email`, `Room`, `Comment`, and tags.
+- stores a `CustomTagRegistry` inside `AddressBook` to track known custom tags separately from each `Person`, while still treating built-in tags as always known.
+- treats tag names as exact, case-sensitive values. There is no automatic tag normalization; kebab-case is a usage convention rather than a storage rule.
+- stores the currently 'selected' `Person` objects (e.g., results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
+- stores a `UserPrefs` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPrefs` object.
+- does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
 
 <box type="info" seamless>
 
@@ -142,7 +146,6 @@ The `Model` component,
 
 </box>
 
-
 ### Storage component
 
 **API** : [`Storage.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/storage/Storage.java)
@@ -150,18 +153,19 @@ The `Model` component,
 <puml src="diagrams/StorageClassDiagram.puml" width="550" />
 
 The `Storage` component,
-* can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
-* persists each person's comment in the JSON data file and loads missing `comment` fields as empty comments to preserve compatibility with older saved data.
-* persists the custom tag registry separately as `customTags`, while also rebuilding missing custom-tag entries from loaded persons so the in-memory model stays usable even if the file is stale.
-* surfaces address-book load outcomes to the UI so the result display can show whether saved data, sample data, or an empty address book was loaded on startup.
-* inherits from both `AddressBookStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
-* depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
+
+- can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
+- persists each person's comment in the JSON data file and loads missing `comment` fields as empty comments to preserve compatibility with older saved data.
+- persists the custom tag registry separately as `customTags`, while also rebuilding missing custom-tag entries from loaded persons so the in-memory model stays usable even if the file is stale.
+- surfaces address-book load outcomes to the UI so the result display can show whether saved data, sample data, or an empty address book was loaded on startup.
+- inherits from both `AddressBookStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
+- depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
 
 ### Common classes
 
 Classes used by multiple components are in the `seedu.address.commons` package.
 
---------------------------------------------------------------------------------------------------------------------
+---
 
 ## **Implementation**
 
@@ -203,10 +207,10 @@ The following sequence diagram shows the main interactions for `list -sort n/`.
 
 **Aspect: How sorting interacts with filtering**
 
-*   **Choice (current):** Sort order is reset by `find` and plain `list`, but
-    preserved by `add` after a prior `list -sort <prefix>/`.
-    *   Pros: Predictable behavior; users always see the list state they explicitly requested.
-    *   Cons: Users cannot "keep" a sort order while performing multiple different searches without re-specifying the sort field.
+- **Choice (current):** Sort order is reset by `find` and plain `list`, but
+  preserved by `add` after a prior `list -sort <prefix>/`.
+  - Pros: Predictable behavior; users always see the list state they explicitly requested.
+  - Cons: Users cannot "keep" a sort order while performing multiple different searches without re-specifying the sort field.
 
 ### Tag management
 
@@ -229,34 +233,33 @@ The following class diagram summarizes the main classes involved in tag manageme
 
 **Aspect: Where tag existence should be tracked**
 
-* **Choice (current):** Store tag existence in `CustomTagRegistry`, while `Tag` only represents a value.
-  * Pros: Keeps the value object simple and reusable; avoids spreading tag-existence logic across commands and model classes.
-  * Cons: Introduces one more model concept that must stay synchronized with resident data.
+- **Choice (current):** Store tag existence in `CustomTagRegistry`, while `Tag` only represents a value.
+  - Pros: Keeps the value object simple and reusable; avoids spreading tag-existence logic across commands and model classes.
+  - Cons: Introduces one more model concept that must stay synchronized with resident data.
 
 **Aspect: How tag casing should work**
 
-* **Choice (current):** Use exact, case-sensitive tag identity for both built-in and custom tags.
-  * Pros: Matches a branch-like mental model; avoids hidden normalization or silent rewriting of user input.
-  * Cons: Makes near-duplicate tags easier to create if users are inconsistent with capitalization.
+- **Choice (current):** Use exact, case-sensitive tag identity for both built-in and custom tags.
+  - Pros: Matches a branch-like mental model; avoids hidden normalization or silent rewriting of user input.
+  - Cons: Makes near-duplicate tags easier to create if users are inconsistent with capitalization.
 
 **Aspect: How to handle incomplete `customTags` data from storage**
 
-* **Choice (current):** Repair the registry in memory from loaded persons, and persist the repaired registry on the next successful save.
-  * Pros: Keeps runtime behavior correct without adding immediate load-time writeback.
-  * Cons: The JSON file can remain temporarily stale until a later successful command triggers saving.
+- **Choice (current):** Repair the registry in memory from loaded persons, and persist the repaired registry on the next successful save.
+  - Pros: Keeps runtime behavior correct without adding immediate load-time writeback.
+  - Cons: The JSON file can remain temporarily stale until a later successful command triggers saving.
 
-
---------------------------------------------------------------------------------------------------------------------
+---
 
 ## **Documentation, logging, testing, configuration, dev-ops**
 
-* [Documentation guide](Documentation.md)
-* [Testing guide](Testing.md)
-* [Logging guide](Logging.md)
-* [Configuration guide](Configuration.md)
-* [DevOps guide](DevOps.md)
+- [Documentation guide](Documentation.md)
+- [Testing guide](Testing.md)
+- [Logging guide](Logging.md)
+- [Configuration guide](Configuration.md)
+- [DevOps guide](DevOps.md)
 
---------------------------------------------------------------------------------------------------------------------
+---
 
 ## **Appendix: Requirements**
 
@@ -268,44 +271,57 @@ Felix is a Year 3 Soc student and RA at Acacia College. Approachable and proacti
 
 **Value proposition**: RACE provides a single, dedicated system to manage resident details safely, keeping sensitive information private. During orientation, RAs must onboard 40+ residents quickly, and RACE helps to manage resident information efficiently, instead of current scattered and slow workflows.
 
-
 ### User stories
 
-* As a new RA, I can add a resident with the required details, so that I can register residents quickly during onboarding.
-* As an RA handling a busy intake, I can include optional fields in the same `add` command, so that incomplete information does not block onboarding.
-* As an RA, I can assign dietary or custom tags to residents, so that I can quickly group residents by needs or participation.
-* As an RA, I can create a new custom tag while adding or editing a resident, so that I can record categories that are specific to my hall or event.
-* As an RA, I can list all residents, so that I can review the current roster at a glance.
-* As an RA, I can sort the resident list by name or room, so that I can scan the roster in the order that best fits my task.
-* As a forgetful RA, I can find residents by keywords across name, room, or tags, so that I can retrieve a record even when I only remember partial information.
-* As an RA, I can edit a resident's core details, so that the address book stays accurate when contact information changes.
-* As an RA, I can replace or clear a resident's tags, so that outdated group labels do not remain in the record.
-* As an RA, I can add, edit or clear a private comment for a resident, so that I can keep follow-up notes without changing the resident's main details.
-* As an RA, I can delete resident records that are no longer needed, so that the address book remains organised.
-* As an RA managing semester turnover, I can delete multiple residents at once, so that I can clean up the list more efficiently.
-* As an RA preparing for a new intake cycle, I can clear all resident records, so that I can reset the app quickly for a new semester.
-* As a new RA, I can refer to help and documentation, so that I can learn the command format quickly.
-* As a busy RA, I can have my data saved automatically after successful commands, so that I do not lose updates if I close the app.
-
+- As a beginner, new RA, I can add a resident with the required details, so that I can register residents quickly during onboarding.
+- As an expert, RA handling a busy intake, I can add a resident even if some optional fields are missing, so that incomplete data does not block onboarding.
+- As an intermediate, RA, I can tag residents with labels (e.g., allergy, athlete, international), so that I can group them easily.
+- As an intermediate, RA, I can create a new custom tag while adding or editing a resident, so that I can record categories that are specific to my hall or event.
+- As a beginner, RA, I can view a list of all registered residents, so that I can see who is currently in the system.
+- As a beginner, RA, I can sort residents alphabetically or by room number, so that I can browse faster and make block checks easier.
+- As a beginner, forgetful RA, I can search using partial information, so that I do not have to attain all information to pinpoint a resident quickly.
+- As a beginner, RA, I can update resident details, so that the information stays accurate over time.
+- As an intermediate, RA, I can replace or clear a resident's tags, so that outdated group labels do not remain in the record.
+- As an expert, RA, I can add, edit or clear a private comment for a resident, so that I can keep follow-up notes without changing the resident's main details.
+- As a beginner, RA, I can remove resident records that are no longer needed, so that my records do not become cluttered.
+- As an expert, RA managing semester turnover, I can delete multiple residents at once, so that I can clean up the list more efficiently.
+- As an expert, RA preparing for a new intake cycle, I can clear all resident records, so that I can reset the app quickly for a new semester.
+- As a beginner, new RA, I can understand what the system is meant to help me do (e.g. user manual), so that I know how it supports my role.
+- As a beginner, busy RA, I can have my data saved automatically after successful commands, so that I do not lose updates if I close the app.
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
-| Priority | As a …​                     | I want to …​                                   | So that I can…​                                                              |
-|----------|-----------------------------|------------------------------------------------|------------------------------------------------------------------------------|
-| `* * *`  | new RA                      | add a resident with required details           | register residents quickly during onboarding                                 |
-| `* * *`  | RA handling busy intake     | include optional fields in the same `add` command | avoid delaying onboarding when some details are unavailable               |
-| `* * *`  | RA                          | list all residents                             | review the full roster at a glance                                           |
-| `* * *`  | forgetful RA                | find residents by partial keywords             | retrieve a resident record without scanning the entire list                  |
-| `* * *`  | RA                          | edit a resident's details                      | keep contact and room information accurate                                   |
-| `* * *`  | RA                          | add or clear a private comment                 | keep follow-up notes without changing the resident's core details            |
-| `* * *`  | RA                          | delete a resident                              | remove records that are no longer needed                                     |
-| `* * *`  | new RA                      | refer to help and documentation                | learn or recall the correct command format quickly                           |
-| `* *`    | RA                          | assign tags to residents                       | group residents by dietary needs, events, or other categories                |
-| `* *`    | RA                          | create new custom tags during `add` or `edit` | record hall-specific groupings without leaving the workflow                  |
-| `* *`    | RA                          | sort the resident list by name or room         | review residents in the order that best supports my task                     |
-| `* *`    | RA managing semester turnover | delete multiple residents at once            | clean up the roster more efficiently                                         |
-| `* *`    | RA preparing for a new semester | clear all resident records                  | reset the app quickly for the next intake cycle                              |
-| `* *`    | busy RA                     | rely on automatic saving                       | avoid losing changes after each successful update                            |
+| Priority | As a …​                                     | I want to …​                                                                              | So that I can…​                                                   |
+| -------- | ------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `* * *`  | beginner, new RA                            | add a resident with required details                                                      | register residents quickly during onboarding                      |
+| `* * *`  | expert, RA handling a busy intake           | add a resident even if some optional fields are missing                                   | incomplete data does not block onboarding                         |
+| `* * *`  | beginner, RA                                | view a list of all registered residents                                                   | see who is currently in the system                                |
+| `* * *`  | beginner, forgetful RA                      | search using partial information                                                          | not have to attain all information to pinpoint a resident quickly |
+| `* * *`  | beginner, RA                                | update resident details                                                                   | the information stays accurate over time                          |
+| `* * *`  | expert, RA                                  | add, edit or clear a private comment for a resident                                       | keep follow-up notes without changing the resident's main details |
+| `* * *`  | beginner, RA                                | remove resident records that are no longer needed                                         | my records do not become cluttered                                |
+| `* * *`  | beginner, new RA                            | understand what the system is meant to help me do (e.g. user manual)                      | know how it supports my role                                      |
+| `* *`    | intermediate, RA                            | tag residents with labels (e.g., allergy, athlete, international)                         | group them easily                                                 |
+| `* *`    | intermediate, RA                            | create a new custom tag while adding or editing a resident                                | record categories specific to my hall or event                    |
+| `* *`    | beginner, RA                                | sort residents alphabetically or by room number                                           | browse faster and make block checks easier                        |
+| `* *`    | intermediate, RA                            | replace or clear a resident's tags                                                        | remove outdated group labels from the record                      |
+| `* *`    | expert, RA managing semester turnover       | delete multiple residents at once                                                         | clean up the roster more efficiently                              |
+| `* *`    | expert, RA preparing for a new intake cycle | clear all resident records                                                                | reset the app quickly for a new semester                          |
+| `* *`    | beginner, busy RA                           | have my data saved automatically after successful commands                                | not lose updates if I close the app                               |
+| `*`      | expert                                      | append notes instead of overwriting them                                                  | history is preserved                                              |
+| `*`      | expert                                      | check if a specific number of residents have been recorded in certain floors              | no one is accidentally left out                                   |
+| `*`      | expert                                      | limit list output to the first N entries                                                  | terminal output stays readable                                    |
+| `*`      | intermediate                                | select specifically residents who have signed up for an activity and review their details | I feel prepared and can cater to their needs                      |
+| `*`      | intermediate                                | notice missing or incomplete resident information                                         | I know who to follow up with                                      |
+| `*`      | intermediate                                | see at a glance residents with special needs                                              | I can be inclusive                                                |
+| `*`      | intermediate                                | list all residents under a tag                                                            | I can plan targeted outreach                                      |
+| `*`      | intermediate                                | filter residents based on specific criteria                                               | I can find relevant groups easily                                 |
+| `*`      | intermediate                                | hide certain columns                                                                      | I can see the fields I want to see at one point more easily       |
+| `*`      | beginner                                    | focus on entering information without visual distractions                                 | I make fewer mistakes                                             |
+| `*`      | beginner                                    | mark certain fields as sensitive                                                          | they are hidden in summary views                                  |
+| `*`      | beginner                                    | hide certain private information from immediate view                                      | sensitive data is protected                                       |
+| `*`      | beginner                                    | use command shortcuts                                                                     | frequent actions are faster                                       |
+| `*`      | beginner                                    | reuse my last command with small edits                                                    | repeated onboarding is efficient                                  |
 
 ### Use cases
 
@@ -324,15 +340,14 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **Extensions**
 
-* 2a. The list is empty.
+- 2a. The list is empty.
 
   Use case ends.
 
-* 3a. The given index is invalid.
+- 3a. The given index is invalid.
+  - 3a1. AddressBook shows an error message.
 
-    * 3a1. AddressBook shows an error message.
-
-      Use case resumes at step 2.
+    Use case resumes at step 2.
 
 **Use case: Add or clear a resident comment**
 
@@ -348,21 +363,19 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **Extensions**
 
-* 2a. The list is empty.
+- 2a. The list is empty.
 
   Use case ends.
 
-* 3a. The given index is invalid.
+- 3a. The given index is invalid.
+  - 3a1. System shows an error message.
 
-    * 3a1. System shows an error message.
+    Use case resumes at step 2.
 
-      Use case resumes at step 2.
+- 3b. The user provides `c/` with no text.
+  - 3b1. System clears the resident's existing comment.
 
-* 3b. The user provides `c/` with no text.
-
-    * 3b1. System clears the resident's existing comment.
-
-      Use case ends.
+    Use case ends.
 
 **Use case: Batch Onboarding**
 
@@ -380,12 +393,12 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **Extensions**
 
-* 3a. The room number is already assigned to another resident.
-    * 3a1. System shows an error message.
-    * Use case resumes at step 3.
-* 3b. User input is invalid.
-    * 3b1. System shows an error message regarding the format.
-    * Use case resumes at step 3.
+- 3a. The room number is already assigned to another resident.
+  - 3a1. System shows an error message.
+  - Use case resumes at step 3.
+- 3b. User input is invalid.
+  - 3b1. System shows an error message regarding the format.
+  - Use case resumes at step 3.
 
 **Use case: Search for Resident During Emergency**
 
@@ -401,12 +414,12 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **Extensions**
 
-* 1a. No residents match the keyword.
-    * 1a1. System shows `0 persons listed!`.
-    * Use case ends.
-* 1b. The search keyword is too broad (e.g., >200 matches).
-    * 1b1. User refines search.
-    * Use case resumes at step 1.
+- 1a. No residents match the keyword.
+  - 1a1. System shows `0 persons listed!`.
+  - Use case ends.
+- 1b. The search keyword is too broad (e.g., >200 matches).
+  - 1b1. User refines search.
+  - Use case resumes at step 1.
 
 **Use case: Mid-Semester Room Swap**
 
@@ -423,9 +436,9 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **Extensions**
 
-* 3a. The user attempts to move a resident into an occupied room without using a placeholder.
-    * 3a1. System shows a duplicate room error.
-    * Use case resumes at step 3.
+- 3a. The user attempts to move a resident into an occupied room without using a placeholder.
+  - 3a1. System shows a duplicate room error.
+  - Use case resumes at step 3.
 
 **Use case: Bulk Removal of Graduating Residents**
 
@@ -441,9 +454,9 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **Extensions**
 
-* 3a. At least one provided index is invalid.
-    * 3a1. System shows an error message and aborts the command.
-    * Use case resumes at step 2.
+- 3a. At least one provided index is invalid.
+  - 3a1. System shows an error message and aborts the command.
+  - Use case resumes at step 2.
 
 **Use case: Managing Medical/Special Needs**
 
@@ -459,38 +472,38 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **Extensions**
 
-* 1a. No residents are found with that tag.
-    * 1a1. System shows an empty list or "No residents found."
-    * Use case ends.
-* 4a. The user provides an invalid index for the update.
-    * 4a1. System shows an error message.
-    * Use case resumes at step 2.
+- 1a. No residents are found with that tag.
+  - 1a1. System shows an empty list or "No residents found."
+  - Use case ends.
+- 4a. The user provides an invalid index for the update.
+  - 4a1. System shows an error message.
+  - Use case resumes at step 2.
 
 ### Non-Functional Requirements
 
 1.  Should work on any _mainstream OS_ as long as it has Java `17` or above installed.
 2.  Should be able to hold up to 1000 persons without a noticeable sluggishness in performance for typical usage.
 3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
-4. Should respond to most user commands within 2 seconds for typical usage involving up to 40 resident records.
-5. Should store all resident information locally on the user’s device and should not require an internet connection to perform any core features.
-6. Should provide clear and informative error messages when the user enters an invalid command or incorrect parameters.
-7. Should preserve all stored resident data between application restarts, unless the user explicitly deletes the data.
-8. Should allow users to recover the application state from saved data files without manual editing of the data files.
-9. Should keep command output readable within a standard terminal window width (e.g., ~120 characters).
+4.  Should respond to most user commands within 2 seconds for typical usage involving up to 40 resident records.
+5.  Should store all resident information locally on the user’s device and should not require an internet connection to perform any core features.
+6.  Should provide clear and informative error messages when the user enters an invalid command or incorrect parameters.
+7.  Should preserve all stored resident data between application restarts, unless the user explicitly deletes the data.
+8.  Should allow users to recover the application state from saved data files without manual editing of the data files.
+9.  Should keep command output readable within a standard terminal window width (e.g., ~120 characters).
 
 ### Glossary
 
-* **Mainstream OS**: Windows, Linux, Unix, MacOS
-* **Private contact detail**: A contact detail that is not meant to be shared with others
-* **Resident**: A person living in the residential college whose information is stored and managed by the system. Each resident record may include fields such as name, room number, and other optional details.
-* **Resident Assistant (RA)**: The primary user of the application who manages resident information, performs onboarding, and maintains records throughout the semester for a batch of residents living in the residential college.
-* **Comment**: A free-form note stored with a resident record for short contextual information such as follow-ups or special reminders.
-* **User's Preferences (UserPref)**: Settings related to the application environment (e.g., window size or file paths) that are saved locally and loaded when the application starts.
-* **JSON**: JSON (JavaScript Object Notation) is the data format used by the application to store resident information and user preferences on disk.
-* **Index**: The number used by commands (e.g., `delete 1`) to identify a resident from the currently displayed list.
-* **GUI (Graphical User Interface)**: The visual interface of the application, built using JavaFX, which allows users to interact with the system through visual components.
+- **Mainstream OS**: Windows, Linux, Unix, MacOS
+- **Private contact detail**: A contact detail that is not meant to be shared with others
+- **Resident**: A person living in the residential college whose information is stored and managed by the system. Each resident record may include fields such as name, room number, and other optional details.
+- **Resident Assistant (RA)**: The primary user of the application who manages resident information, performs onboarding, and maintains records throughout the semester for a batch of residents living in the residential college.
+- **Comment**: A free-form note stored with a resident record for short contextual information such as follow-ups or special reminders.
+- **User's Preferences (UserPref)**: Settings related to the application environment (e.g., window size or file paths) that are saved locally and loaded when the application starts.
+- **JSON**: JSON (JavaScript Object Notation) is the data format used by the application to store resident information and user preferences on disk.
+- **Index**: The number used by commands (e.g., `delete 1`) to identify a resident from the currently displayed list.
+- **GUI (Graphical User Interface)**: The visual interface of the application, built using JavaFX, which allows users to interact with the system through visual components.
 
---------------------------------------------------------------------------------------------------------------------
+---
 
 ## **Appendix: Instructions for manual testing**
 
@@ -499,31 +512,27 @@ Given below are instructions to test the app manually.
 <box type="info" seamless>
 
 **Note:** These instructions only provide a starting point for testers to work on;
-testers are expected to do more *exploratory* testing.
+testers are expected to do more _exploratory_ testing.
 
 </box>
 
 ### Launch and shutdown
 
 1. Initial launch
-
    1. Download the jar file and copy into an empty folder
 
    1. Double-click the jar file Expected: Shows the GUI with a set of sample contacts. The window size may not be optimum.
 
 1. Saving window preferences
-
    1. Resize the window to an optimum size. Move the window to a different location. Close the window.
 
    1. Re-launch the app by double-clicking the jar file.<br>
-       Expected: The most recent window size and location is retained.
+      Expected: The most recent window size and location is retained.
 
 ### Sorting residents
 
 1. Sorting residents by different fields
-
    1. Prerequisites: Multiple residents with different names, rooms, and phone numbers.
-   
    1. Test case: `list -sort r/`<br>
       Expected: List is updated to show all residents sorted by room number (format: #BLOCK-ROOM[-LETTER]). Status message confirms sorting.
 
@@ -533,7 +542,6 @@ testers are expected to do more *exploratory* testing.
 ### Deleting a person
 
 1. Deleting a person while all persons are being shown
-
    1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
 
    1. Test case: `delete 1`<br>
@@ -548,7 +556,6 @@ testers are expected to do more *exploratory* testing.
 ### Editing a person's comment
 
 1. Adding or clearing a comment while all persons are being shown
-
    1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
 
    1. Test case: `comment 1 c/Requires wheelchair-accessible venue`<br>
@@ -563,7 +570,6 @@ testers are expected to do more *exploratory* testing.
 ### Saving data
 
 1. Autosaving after a successful command
-
    1. Prerequisites: App has been launched at least once in a test folder.
 
    1. Test case: `add n/Test Resident r/#09-101` and then close the app.<br>
@@ -574,7 +580,6 @@ testers are expected to do more *exploratory* testing.
       Expected: The invalid command shows an error message and does not modify saved data. After closing and re-launching the app, `Another Resident` is still present and no unintended changes have been made.
 
 1. Dealing with a missing data file
-
    1. Prerequisites: Close the app. In the app folder, ensure `data/addressbook.json` does not exist by deleting it or moving it elsewhere.
 
    1. Test case: Launch the app in that folder.<br>
@@ -584,7 +589,6 @@ testers are expected to do more *exploratory* testing.
       Expected: A new `data/addressbook.json` file is created in the app folder.
 
 1. Dealing with a corrupted data file
-
    1. Prerequisites: Close the app. Open `data/addressbook.json` in a text editor and replace its contents with invalid JSON such as `{ invalid json`.
 
    1. Test case: Launch the app.<br>
@@ -593,9 +597,7 @@ testers are expected to do more *exploratory* testing.
    1. Test case: Execute a successful command such as `add n/Recovered Resident r/#11-111`.<br>
       Expected: The app saves normally again, and `data/addressbook.json` is replaced with a valid file containing the new resident data.
 
-1. _{ more test cases …​ }_
-
---------------------------------------------------------------------------------------------------------------------
+---
 
 ## **Appendix: Planned Enhancements**
 

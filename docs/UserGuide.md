@@ -53,8 +53,9 @@ RACE is the product name used throughout this guide. Where the term "address boo
 
 <box type="info" seamless>
 
-**Notes about the command format:**<br>
+**Notes about the command format:**
 
+**Basic syntax:**
 * Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
   e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
 
@@ -67,6 +68,7 @@ RACE is the product name used throughout this guide. Where the term "address boo
 * Parameters can be in any order.<br>
   e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
 
+**Dash-based options:**
 * Dash-based inputs are options.<br>
   Some options take a value, while others are standalone flags.
 
@@ -79,6 +81,7 @@ RACE is the product name used throughout this guide. Where the term "address boo
 * If a flag is specified multiple times, it will be treated as a single flag.<br>
   e.g. `-newtag -newtag` is treated the same as `-newtag`.
 
+**Multi-value and spacing:**
 * For commands that accept multiple values in one parameter, use comma-separated input.<br>
   e.g. `delete 1,3,5` deletes residents at indices 1, 3, and 5.
 
@@ -87,12 +90,14 @@ RACE is the product name used throughout this guide. Where the term "address boo
 
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
 
+**Field constraints:**
 * For fields that should appear at most once (e.g. `n/`, `p/`, `e/`, `r/`, `c/`), providing the same prefix more than once in a single command is rejected.
 
 * Prefix-like tokens are reserved by the parser and should not be used as plain text inside field values.<br>
   e.g. avoid including `p/`, `c/`, `n/`, `e/`, `r/`, or `t/` inside free-text input unless you intend to start a new field.
 
-* When the app reports **`Invalid command format!`**, the message often includes a **second line** showing the correct usage for that command — read both lines together.
+* When the app reports **`Invalid command format!`**, the message often includes a **second line** showing the correct usage for that command. Read both lines together.
+
 </box>
 
 ### Viewing help : `help`
@@ -564,8 +569,10 @@ _Details coming soon ..._
 
 **Q**: Can I add two residents with the same name?<br>
 **A**: No. Name is part of duplicate checking, so adding another resident with the same name is rejected. If two residents have the same legal name, use a differentiator in the stored name, e.g., `Alex Tan (Block 14)` and `Alex Tan (Block 9)`.
+
 **Q**: What fields are checked for duplicates when adding a resident?<br>
 **A**: RACE rejects `add` if an existing resident already has the same `name`, `room`, `phone` (when provided), or `email` (when provided).
+
 **Q**: Can I delete more than one resident at once?<br>
 **A**: Yes. Use comma-separated indices, e.g. `delete 1,3,5` (see the [delete](#deleting-a-resident-delete) section).
 
