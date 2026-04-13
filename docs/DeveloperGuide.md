@@ -128,10 +128,10 @@ How the parsing works:
 The `Model` component,
 
 * stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object). Each `Person` stores immutable values for `Name`, `Phone`, `Email`, `Room`, `Comment`, and tags.
-* stores a `CustomTagRegistry` inside `AddressBook` to track user-created tags separately from each `Person`.
+* stores a `CustomTagRegistry` inside `AddressBook` to track known custom tags separately from each `Person`, while still treating built-in tags as always known.
 * treats tag names as exact, case-sensitive values. There is no automatic tag normalization; kebab-case is a usage convention rather than a storage rule.
 * stores the currently 'selected' `Person` objects (e.g., results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
-* stores a `UserPref` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
+* stores a `UserPrefs` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPrefs` object.
 * does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
 
 <box type="info" seamless>
@@ -153,7 +153,7 @@ The `Storage` component,
 * can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
 * persists each person's comment in the JSON data file and loads missing `comment` fields as empty comments to preserve compatibility with older saved data.
 * persists the custom tag registry separately as `customTags`, while also rebuilding missing custom-tag entries from loaded persons so the in-memory model stays usable even if the file is stale.
-* inherits from both `AddressBookStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
+* inherits from both `AddressBookStorage` and `UserPrefsStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
 * depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
 
 ### Common classes
@@ -190,8 +190,9 @@ The implementation relies on JavaFX's `SortedList`, which is initialized in `Mod
 2.  `ListCommand` is created with the field name and its comparator.
 3.  Upon execution, `ListCommand` calls `Model#updateFilteredPersonList(Predicate, Comparator)`.
 4.  `ModelManager` sets the filter on its `FilteredList` and the comparator on its `SortedList`.
-5.  If a simple `list` (without parameters) or a filtering command (like
-    `find`) is used, the sort comparator is reset to `null`.
+5.  Sorting is only applied when a command calls `Model#updateFilteredPersonList(Predicate, Comparator)`.
+    Commands that use the single-argument overload reset the sort comparator to `null`; this includes plain `list`,
+    `find`, and commands such as `add` and `comment` that refresh the shown list through `updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)`.
 
 The following sequence diagram shows the main interactions for `list -sort n/`.
 
@@ -213,7 +214,7 @@ The tag model separates three concerns: tag identity, built-in tag definitions, 
 
 1. `Tag` remains an immutable value object that stores the displayed tag name and uses exact string equality. This makes tag behavior predictable: `study-group` and `Study-Group` are different tags.
 2. `DefaultTagEnum` defines the built-in tags (`vegetarian`, `vegan`, `halal`, `allergies`). These are treated as known immediately, but they follow the same case-sensitive matching rule as custom tags.
-3. `CustomTagRegistry` tracks which custom tags currently exist in an `AddressBook`. This keeps "does this tag exist already?" in the model layer instead of inside `Tag`.
+3. `CustomTagRegistry` stores the currently known custom tags in an `AddressBook`, and its lookup logic also treats built-in tags as known immediately. This keeps "does this tag exist already?" in the model layer instead of inside `Tag`.
 4. `add` and `edit` only register unknown custom tags when the user explicitly supplies `-newtag`. Without that flag, both commands reject unknown tags consistently.
 5. Shared helpers, `ParserUtil.parseBooleanFlag(...)` and `TagCommandUtil.validateKnownTags(...)`, keep `-newtag` parsing and tag validation aligned between `add` and `edit`.
 6. During loading and person updates, `AddressBook` also registers custom tags found on persons. This keeps the in-memory registry consistent even if the stored `customTags` list is incomplete.
@@ -595,3 +596,20 @@ testers are expected to do more *exploratory* testing.
       Expected: The app saves normally again, and `data/addressbook.json` is replaced with a valid file containing the new resident data.
 
 1. _{ more test cases …​ }_
+
+--------------------------------------------------------------------------------------------------------------------
+
+## **Appendix: Planned Enhancements**
+
+Team size: 5
+
+1. Restore the existing Help window when `help` is run while it is minimised: currently, running `help` again can appear to do nothing if the Help window is minimised. We plan to change this so the same Help window is restored, brought to the front, and focused instead of remaining hidden.
+2. Identify the offending index in bulk deletion failures: currently, if `delete 1,3,999` fails, the message does not clearly tell the user which index caused the command to be rejected. We plan to report the specific invalid index and clarify that no residents were deleted.
+3. Make unsupported-prefix errors in `add` and `edit` more accurate: currently, unsupported prefixes such as `c/` in `add n/Amy r/#01-01 c/test` may be absorbed into another field and trigger a misleading room or tag format error. We plan to detect unsupported prefixes explicitly and report them directly, e.g. `Unsupported prefix in add command: c/`.
+4. Allow both AND logic and OR logic in the `find` command: currently, `find` uses OR logic across all keywords, so users cannot require multiple conditions in one search. We plan to extend `find` so users can express AND conditions explicitly, while keeping OR searches available, e.g. `find John AND Doe` or `find John AND 14-203`.
+5. Shorten overly verbose startup load errors while preserving useful details: currently, the app shows the original storage/parser error in the result display on startup so users are not left without feedback. Empty files are treated like missing data files and load sample residents, but malformed JSON can still produce a very long message because the raw parser output may include file excerpts, line numbers, and column numbers. We plan to keep the useful location details while shortening the displayed message, and move the full raw error to logs or an expandable UI.
+6. Accept more valid room formats to account for more residences: currently, the room validation rules are stricter than some real residence naming schemes. We plan to expand accepted room formats so legitimate inputs from other residences can be stored without workarounds, while still rejecting malformed room entries. This includes accepting room inputs that omit the leading `#` by automatically prepending it during parsing, and treating alphabetic room suffixes case-insensitively so inputs such as `#14-203-d` and `14-203-D` are accepted consistently.
+7. Allow names that contain prefix-like text such as `p/` inside the actual name: currently, names like `Chloe p/o Tan` can be misread because `p/` is treated as the phone prefix. We plan to refine parsing so such names can be entered normally without the command being split at `p/`.
+8. Allow duplicate legal names by automatically appending a stored qualifier: currently, residents with the same legal name cannot both be added. We plan to allow the second and subsequent duplicates by automatically appending a distinguishing qualifier such as `Alex Tan (Block 14)` to the stored display name so each resident record remains uniquely identifiable.
+9. Add a confirmation pop-up before `clear` removes all residents: currently, `clear` executes immediately and permanently. We plan to show a confirmation dialog that states all resident records will be deleted and only proceed when the user explicitly confirms.
+10. Make the command box behave more like a terminal after execution: currently, the previous command text remains in the input box after a command runs. We plan to clear the command box after each submission, while also adding up-arrow and down-arrow history navigation so users can cycle through previous commands when they want to reuse or edit them.
