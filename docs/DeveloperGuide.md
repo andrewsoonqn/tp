@@ -450,7 +450,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 2. System shows a list of residents matching the tag.
 3. User requests to view the full details of a specific resident.
 4. User requests to add a new specific dietary tag to that resident’s record.
-5. System preserves the history and adds the new tag.
+5. System updates the resident record with the new tag.
 
    Use case ends.
 
