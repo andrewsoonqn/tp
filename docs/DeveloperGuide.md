@@ -190,8 +190,9 @@ The implementation relies on JavaFX's `SortedList`, which is initialized in `Mod
 2.  `ListCommand` is created with the field name and its comparator.
 3.  Upon execution, `ListCommand` calls `Model#updateFilteredPersonList(Predicate, Comparator)`.
 4.  `ModelManager` sets the filter on its `FilteredList` and the comparator on its `SortedList`.
-5.  If a simple `list` (without parameters) or a filtering command (like
-    `find`) is used, the sort comparator is reset to `null`.
+5.  If a simple `list` (without parameters) or `find` is used, the sort
+    comparator is reset to `null`. By contrast, `add` preserves any active
+    comparator while resetting the predicate to show all residents.
 
 The following sequence diagram shows the main interactions for `list -sort n/`.
 
@@ -201,7 +202,8 @@ The following sequence diagram shows the main interactions for `list -sort n/`.
 
 **Aspect: How sorting interacts with filtering**
 
-*   **Choice (current):** Sort order is reset when a new filter is applied unless specified via `list -sort <prefix>/`.
+*   **Choice (current):** Sort order is reset by `find` and plain `list`, but
+    preserved by `add` after a prior `list -sort <prefix>/`.
     *   Pros: Predictable behavior; users always see the list state they explicitly requested.
     *   Cons: Users cannot "keep" a sort order while performing multiple different searches without re-specifying the sort field.
 
