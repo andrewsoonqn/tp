@@ -498,6 +498,7 @@ AddressBook data are saved automatically as a JSON file `[JAR file location]/dat
 **Caution:**
 If your changes to the data file makes its format invalid, AddressBook will discard all data and start with an empty data file at the next run.  Hence, it is recommended to take a backup of the file before editing it.<br>
 Furthermore, certain edits can cause the AddressBook to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
+On startup, RACE shows a status message in the message box to indicate whether saved data was loaded successfully, sample data was loaded, or saved data could not be loaded. If loading fails, the message may include the original storage/parser error text and can be long, especially when the JSON file is malformed.
 If you edit tags manually, keep the `customTags` list reasonably aligned with the custom tags used by residents. On load, RACE ensures that all tags used by residents are present in `customTags`, but extra unused entries in `customTags` may still remain.
 </box>
 
@@ -553,7 +554,10 @@ _Details coming soon ..._
 **A**: Close the app first. Then find `data/addressbook.json` in the same folder as the `.jar` file you use to open the app. Copy that file into the `data` folder within the same folder as the `.jar` file in the new setup. If the new setup already has its own `addressbook.json`, replace it with your copied file. When you open the app again, your resident list should appear there.
 
 **Q**: What happens the first time I open the app?<br>
-**A**: If no data file exists yet, the app starts with sample residents. These are written to `data/addressbook.json` when you make your first successful change. If the file exists but cannot be loaded properly, the app starts with an empty list, and your next successful change saves a fresh data file.
+**A**: If no data file exists yet, the app starts with sample residents. These are written to `data/addressbook.json` when you make your first successful change. If the file exists but cannot be loaded properly, the app starts with an empty list, your next successful change saves a fresh data file, and the message box shows the startup loading result.
+
+**Q**: What will I see if `addressbook.json` cannot be loaded on startup?<br>
+**A**: RACE shows the loading result in the message box. For example, if duplicate residents are found, the message box shows the load error and that the app started with an empty address book instead. If the file exists but is empty, RACE treats it like a missing data file and loads sample residents instead. For malformed JSON syntax, the original parser error may be shown and can be quite long.
 
 ### Help
 
