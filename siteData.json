@@ -51,7 +51,6 @@
         "storage-component": "Storage component",
         "common-classes": "Common classes",
         "implementation": "Implementation",
-        "future-work-undo-redo-feature": "[Future Work] Undo/redo feature",
         "sorting-feature": "Sorting Feature",
         "tag-management": "Tag management",
         "documentation-logging-testing-configuration-dev-ops": "Documentation, logging, testing, configuration, dev-ops",
@@ -142,40 +141,6 @@
       "title": "",
       "headings": {
         "race-residential-assistant-s-contact-entries": "RACE (Residential Assistant's Contact Entries)"
-      },
-      "headingKeywords": {}
-    },
-    {
-      "src": "team/aishgogoyal.md",
-      "headings": {},
-      "headingKeywords": {}
-    },
-    {
-      "src": "team/andrewsoon.md",
-      "title": "John Doe's Project Portfolio Page",
-      "headings": {
-        "project-addressbook-level-3": "Project: AddressBook Level 3"
-      },
-      "headingKeywords": {}
-    },
-    {
-      "src": "team/atharva.md",
-      "headings": {},
-      "headingKeywords": {}
-    },
-    {
-      "src": "team/johndoe.md",
-      "title": "John Doe's Project Portfolio Page",
-      "headings": {
-        "project-addressbook-level-3": "Project: AddressBook Level 3"
-      },
-      "headingKeywords": {}
-    },
-    {
-      "src": "team/sayyidmehdi.md",
-      "title": "Sayyid Mehdi's Project Portfolio Page",
-      "headings": {
-        "project-race-residential-assistant-s-contact-entries": "Project: RACE (Residential Assistant's Contact Entries)"
       },
       "headingKeywords": {}
     }
