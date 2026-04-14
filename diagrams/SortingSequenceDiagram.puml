@@ -17,7 +17,7 @@ end box
 [-> LogicManager : execute("list -sort n/")
 activate LogicManager
 
-LogicManager -> AddressBookParser : parseCommand("list -sort n/")
+LogicManager -> AddressBookParser : parseCommand("...")
 activate AddressBookParser
 
 create ListCommandParser
@@ -47,21 +47,10 @@ deactivate AddressBookParser
 LogicManager -> ListCommand : execute(m)
 activate ListCommand
 
-ListCommand -> Model : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS, nameComparator)
+ListCommand -> Model : updateFilteredPersonList(...)
 activate Model
-note right of Model
-  ModelManager updates:
-  1. filteredPersons.setPredicate(...)
-  2. sortedPersons.setComparator(nameComparator)
-end note
 Model --> ListCommand
 deactivate Model
-
-create CommandResult
-ListCommand -> CommandResult : CommandResult("Listed all residents sorted by name")
-activate CommandResult
-CommandResult --> ListCommand
-deactivate CommandResult
 
 ListCommand --> LogicManager : r
 deactivate ListCommand
