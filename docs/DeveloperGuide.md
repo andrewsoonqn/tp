@@ -171,16 +171,6 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 
-### \[Future Work\] Undo/redo feature
-
-Undo/redo is **not implemented** in the current codebase on `master`.
-There are no `undo`/`redo` commands, no `VersionedAddressBook`, and no
-`Model#commitAddressBook` / `Model#undoAddressBook` / `Model#redoAddressBook`
-operations in the active implementation.
-
-If the team revisits undo/redo in a future release, the design should be
-documented here together with updated sequence/activity diagrams.
-
 ### Sorting Feature
 
 #### Implementation
