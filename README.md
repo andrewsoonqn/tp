@@ -1,4 +1,3 @@
-
 # RACE – Resident Administration & Contact Explorer
 
 [![Java CI](https://github.com/AY2526S2-CS2103T-T10-2/tp/actions/workflows/gradle.yml/badge.svg)](https://github.com/AY2526S2-CS2103T-T10-2/tp/actions)
@@ -102,9 +101,9 @@ The project is based on the **AddressBook Level 3 architecture**, adapted for ma
 
 More information can be found in the following documents:
 
-- User Guide
-- Developer Guide
-- Project Website
+- [User Guide](https://ay2526s2-cs2103t-t10-2.github.io/tp/UserGuide.html)
+- [Developer Guide](https://ay2526s2-cs2103t-t10-2.github.io/tp/DeveloperGuide.html)
+- [Project Website](https://ay2526s2-cs2103t-t10-2.github.io/tp/index.html)
 
 ---
 
